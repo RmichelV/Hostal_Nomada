@@ -16,7 +16,10 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name'=>[
+                'string', 
+                'max:255', 
+                'regex:/^([A-ZÁÉÍÓÚÑÇĆ][a-záéíóúñçć]+)(\s[A-ZÁÉÍÓÚÑÇĆ][a-záéíóúñçć]+)*$/'],
             'email' => [
                 'required',
                 'string',
@@ -24,7 +27,17 @@ class ProfileUpdateRequest extends FormRequest
                 'email',
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
-            ],
+                'regex:/^[\w\.-]+@[\w\.-]+\.(com|net|edu)$/']
+        ];
+    }
+    public function messages(): array
+    {
+        return [
+            'name.regex' => 'Cada nombre debe comenzar con una letra mayúscula y estar seguido de letras minúsculas.',
+            'email.email' => 'El correo electrónico debe ser una dirección válida.',
+            'email.max' => 'El correo electrónico no debe superar los 255 caracteres.',
+            'email.unique' => 'El correo electrónico ya está en uso.',
+            'email.regex' => 'El email debe terminar en .com, .net o .edu',
         ];
     }
 }

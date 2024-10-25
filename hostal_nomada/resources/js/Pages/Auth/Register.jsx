@@ -5,9 +5,13 @@ import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function Register() {
+export default function Register({nationalities}) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
+        last_name:'',
+        identification_number:'',
+        nationality_id:'',
+        phone:'',
         email: '',
         password: '',
         password_confirmation: '',
@@ -27,7 +31,7 @@ export default function Register() {
 
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="name" value="Nombre(s): " />
 
                     <TextInput
                         id="name"
@@ -41,6 +45,106 @@ export default function Register() {
                     />
 
                     <InputError message={errors.name} className="mt-2" />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="last_name" value="Apellido(s): " />
+
+                    <TextInput
+                        id="last_name"
+                        name="last_name"
+                        value={data.last_name}
+                        className="mt-1 block w-full"
+                        autoComplete="last_name"
+                        isFocused={true}
+                        onChange={(e) => setData('last_name', e.target.value)}
+                        required
+                    />
+
+                    <InputError message={errors.last_name} className="mt-2" />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="identification_number" value="Número de identificación:" />
+
+                    <TextInput
+                        type='number'
+                        id="identification_number"
+                        name="identification_number"
+                        value={data.identification_number}
+                        className="mt-1 block w-full"
+                        autoComplete="identification_number"
+                        isFocused={true}
+                        onChange={(e) => {
+                            const value = e.target.value.replace(/[^0-9]/g, ''); 
+                            setData('identification_number', value);
+                        }}
+                        required
+                    />
+
+                    <InputError message={errors.identification_number} className="mt-2" />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="nationality_id" value="Nacionalidad:" />
+
+                    <select name="nationality_id" 
+                            id="nationality_id"
+                            onChange={(e) => setData('nationality_id', e.target.value)}
+                            >
+                        <option value="">Selecciona tu Nacionalidad</option>
+                        {nationalities.map(nationality=>[
+                            <option value={nationality.id}>{nationality.name}</option>
+                        ])}
+                    </select>
+
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="birthday" value="Fecha de Nacimiento:" />
+
+                    <TextInput
+                        type='date'
+                        id="birthday"
+                        name="birthday"
+                        value={data.birthday}
+                        className="mt-1 block w-full"
+                        autoComplete="birthday"
+                        isFocused={true}
+                        onChange={(e) => {
+                            const dateValue = e.target.value;
+                            const [year, month, day] = dateValue.split("-");
+
+                            if (year.length > 4) {
+                                return; 
+                            }
+                            setData('birthday', dateValue); 
+                        }}
+                        required
+                    />
+
+                    <InputError message={errors.birthday} className="mt-2" />
+                </div>
+                
+                <div>
+                    <InputLabel htmlFor="phone" value="Telefono de contacto:" />
+
+                    <TextInput
+                        type='number'
+                        id="phone"
+                        name="phone"
+                        value={data.phone}
+                        className="mt-1 block w-full"
+                        autoComplete="phone"
+                        isFocused={true}
+                        onChange={(e) => {
+                            const value = e.target.value.replace(/[^0-9]/g, ''); 
+                            setData('identification_number', value);
+                        }}
+                        required
+                    />
+
+                    <InputError message={errors.phone} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
@@ -111,7 +215,7 @@ export default function Register() {
                     </Link>
 
                     <PrimaryButton className="ms-4" disabled={processing}>
-                        Register
+                        Registrarse
                     </PrimaryButton>
                 </div>
             </form>

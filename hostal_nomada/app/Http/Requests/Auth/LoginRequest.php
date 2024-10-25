@@ -27,8 +27,25 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email' => [
+            'required', 
+            'string', 
+            'email',
+            'regex:/^[\w\.-]+@[\w\.-]+\.(com|net|edu)$/'
+            ],
             'password' => ['required', 'string'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.regex' => 'Cada nombre debe comenzar con una letra mayúscula y estar seguido de letras minúsculas.',
+            'email.email' => 'El correo electrónico debe ser una dirección válida.',
+            'email.max' => 'El correo electrónico no debe superar los 255 caracteres.',
+            'email.unique' => 'El correo electrónico ya está en uso.',
+            'email.regex' => 'El email debe terminar en .com, .net o .edu',
+            'password.required' => 'Debe Ingresar una contraseña por favor'
         ];
     }
 
