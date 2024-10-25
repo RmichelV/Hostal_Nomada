@@ -21,7 +21,7 @@ export default function ForgotPassword({ status }) {
 
             <div className="mb-4 text-sm text-gray-600">
             ¿Olvidaste tu contraseña? No hay problema. Solo indícanos tu dirección de correo electrónico 
-            y te enviaremos un enlace para restablecer tu contraseña, que te permitirá elegir una nueva.​⬤
+            y te enviaremos un enlace para restablecer tu contraseña, que te permitirá elegir una nueva.​
             </div>
 
             {status && (
