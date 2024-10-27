@@ -16,6 +16,9 @@ import TextInput from '@/Components/TextInput';
 
 //modal 
 import Modal from '@/Components/Modal';
+//css
+import btnCrud from '../../../css/botonesCrud.module.css';
+
 
 export default function RoomType(props) {
     const { room_types } = props;
@@ -71,15 +74,15 @@ export default function RoomType(props) {
                 }
             >
                 <Head title="Tipos de habitaciones" />
-
-                <div className="py-12">
+                
+                <div className="py">
                     <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                        <button onClick={openAgregarModal} className={`${btnCrud.addButton}`}>
+                            Agregar Nueva habitación
+                        </button>
                         <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                             <div className="p-6 text-gray-900">
-                                <button onClick={openAgregarModal} className="btn-primary">
-                                    Agregar Nueva habitación
-                                </button>
-
+                        
                                 <Table>
                                     <Thead>
                                         <Tr>
@@ -89,18 +92,29 @@ export default function RoomType(props) {
                                             <Th>Precio Unitario Bs.</Th>
                                             <Th>Descripción</Th>
                                             <Th>Imagen de la habitacion</Th>
+                                            <Th>Acciones</Th>
                                         </Tr>
                                     </Thead>
                                     <Tbody>
                                         {room_types.map((room_type) => (
                                             <Tr key={room_type.id}>
-                                                <Td>{room_type.id}</Td>
-                                                <Td>{room_type.name}</Td>
-                                                <Td>{room_type.quantity}</Td>
-                                                <Td>{room_type.price}</Td>
+                                                <Td className={`${btnCrud.tc}`}>{room_type.id}</Td>
+                                                <Td className={`${btnCrud.tc}`}>{room_type.name}</Td>
+                                                <Td className={`${btnCrud.tc}`}>{room_type.quantity}</Td>
+                                                <Td className={`${btnCrud.tc}`}>{room_type.price}</Td>
                                                 <Td>{room_type.description}</Td>
                                                 <Td>
-                                                    <img src={`img/${room_type.room_image}`} alt="" />
+                                                    <img src={`img/${room_type.room_image}`} alt=""className={btnCrud.image_room}/>
+                                                </Td>
+                                                <Td>
+                                                    <div className={`${btnCrud.buttons}`}>
+                                                        <button onClick={openEditarModal} className={`${btnCrud.addButton}`}>
+                                                            Editar
+                                                        </button>
+                                                        <button onClick={openAgregarModal} className={`${btnCrud.addButton}`}>
+                                                            Eliminar
+                                                        </button>
+                                                    </div>
                                                 </Td>
                                             </Tr>
                                         ))}
