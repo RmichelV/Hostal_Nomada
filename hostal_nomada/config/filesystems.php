@@ -32,17 +32,18 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app/private'),
-            'serve' => true,
+            'root' => public_path('img'),
+            // 'serve' => true,
             'throw' => false,
         ],
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root' => public_path('img'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
+            'max_file_size'=>1024*1024 * 5
         ],
 
         's3' => [

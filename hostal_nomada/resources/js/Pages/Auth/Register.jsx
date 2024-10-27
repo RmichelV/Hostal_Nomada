@@ -165,7 +165,7 @@ export default function Register({nationalities}) {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <InputLabel htmlFor="password" value="Contraseña" />
 
                     <TextInput
                         id="password"
@@ -184,7 +184,7 @@ export default function Register({nationalities}) {
                 <div className="mt-4">
                     <InputLabel
                         htmlFor="password_confirmation"
-                        value="Confirm Password"
+                        value="Confirmar Contraseña"
                     />
 
                     <TextInput
@@ -211,7 +211,7 @@ export default function Register({nationalities}) {
                         href={route('login')}
                         className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
-                        Already registered?
+                        Ya te haz registrado?
                     </Link>
 
                     <PrimaryButton className="ms-4" disabled={processing}>

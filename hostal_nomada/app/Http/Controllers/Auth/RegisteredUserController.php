@@ -50,7 +50,7 @@ class RegisteredUserController extends Controller
             'identification_number' => [
                 'required',
                 'integer',
-                'digits_between:4,10',],
+                'digits_between:6,10',],
             'nationality_id' => [
                 'required',
                 'exists:nationalities,id'],

@@ -4,6 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+//librerias agregadas: 
+use App\Models\User;
+use App\Models\Rol;
+use App\Models\Nationality;
+use App\Models\Room_type;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rules\Password;
+
 class UserController extends Controller
 {
     /**
@@ -11,7 +23,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::all();
+        $rols = Rol::all();
+        $nationalities = Nationality::all();
+        $room_types = Room_type::all();
     }
 
     /**
