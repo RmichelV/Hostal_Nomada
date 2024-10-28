@@ -68,10 +68,10 @@ class RoomTypeController extends Controller
             'name.unique' => 'El tipo de habitación que intentaste ingresar ya existe',
             'quantity.integer' => 'El numero ingresado debe ser entero (Ej. 1, 2, 3, etc)',
             'quantity.regex'=> 'El número ingresado debe estar entre 1 y 99',
-            'price.required'=>'por favor introduzca un valor para el salario',
+            'price.required'=>'por favor introduzca un valor para el precio',
             'price.regex'=>'por favor introduzca un valor con hasta dos decimales',
-            'price.min'=>'El salario no debe ser menor a Bs. 25',
-            'price.max'=>'El salario no debe ser mayor a Bs. 700',
+            'price.min'=>'El precio no debe ser menor a Bs. 25',
+            'price.max'=>'El precio no debe ser mayor a Bs. 700',
             'description.required' => 'Agregue una description por favor',
             'description.max' => 'El campo solo admite hasta 255 caracteres',
         ]); 
@@ -121,16 +121,88 @@ class RoomTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Room_type $room_type)
+    public function update(Request $request, $id)
     {
-        //
+        $room_type = Room_type::find($id);
+
+        $validator = Validator::make($request->all(),[
+            'name'=>[
+                'required',
+                'string', 
+                'max:255', 
+                Rule::unique('room_types')->ignore($room_type->id),
+                'regex:/^([A-ZÁÉÍÓÚÑÇĆ][a-záéíóúñçć]+)(\s[A-ZÁÉÍÓÚÑÇĆ][a-záéíóúñçć]+)*$/'],
+            'quantity'=>[
+                'integer',
+                'regex:/^[0-9]{1,2}$/'
+            ],
+            'price' => [
+                'required',
+                'numeric',
+                'regex:/^\d+(\.\d{1,2})?$/',
+                'min:25',  
+                'max:700', 
+            ],
+            'description' => [
+                'required',
+                'max:255'
+            ]
+        ],[
+            'name.required'=>'Debe introducir un nombre para el tipo de habitación que se agregará',
+            'name.string' => 'El nombre no debe contener números',
+            'name.regex' => 'Cada nombre debe comenzar con una letra mayúscula y estar seguido de letras minúsculas.',
+            'name.unique' => 'El tipo de habitación que intentaste ingresar ya existe',
+            'quantity.integer' => 'El numero ingresado debe ser entero (Ej. 1, 2, 3, etc)',
+            'quantity.regex'=> 'El número ingresado debe estar entre 1 y 99',
+            'price.required'=>'por favor introduzca un valor para el precio',
+            'price.regex'=>'por favor introduzca un valor con hasta dos decimales',
+            'price.min'=>'El precio no debe ser menor a Bs. 25',
+            'price.max'=>'El precio no debe ser mayor a Bs. 700',
+            'description.required' => 'Agregue una description por favor',
+            'description.max' => 'El campo solo admite hasta 255 caracteres',
+        ]); 
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('modal_id', 'editar') ; 
+        }
+        
+        $room_type->name = $request->input('name');
+        $room_type->quantity = $request->input('quantity');
+        $room_type->price = $request->input('price');
+        $room_type->description = $request->input('description');
+
+        if ($request->hasFile('room_image')) {
+            // Elimina la imagen anterior si es necesario
+            if ($room_type->room_image) {
+                Storage::disk('public')->delete($room_type->room_image);
+            }
+    
+            // Procesa la nueva imagen
+            $room_image = $request->file('room_image');
+            $nombreImagen = $room_type->name . "." . $room_image->extension();
+            $ruta = $room_image->storeAs('', $nombreImagen, 'public');
+            
+            $room_type->room_image = $ruta; 
+        }
+        
+        $room_type->update();
+
+        return Redirect::back()->with('message', 'Habitación actualizada correctamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Room_type $room_type)
+    public function destroy($id)
     {
-        //
+        $room_type = Room_type::find($id);
+
+        $room_type->delete();
+
+        return Redirect::back()->with('message', 'Habitación eliminada correctamente');
+
     }
 }
