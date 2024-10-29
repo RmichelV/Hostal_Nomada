@@ -40,8 +40,8 @@ export default function AdministrationNav({ header, children, auth }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
+                                    href={route('home')}
+                                    active={route().current('home')}
                                 >
                                     Dashboard
                                 </NavLink>
@@ -58,15 +58,15 @@ export default function AdministrationNav({ header, children, auth }) {
                             {user && user.rol_id!=1 && (
                                 <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                     <NavLink
-                                        href={route('dashboard')}
-                                        active={route().current('dashboard')}
+                                        href={route('home')}
+                                        active={route().current('home')}
                                     >
                                         Lista de reservaciones
                                     </NavLink>
 
                                     <NavLink
-                                        href={route('dashboard')}
-                                        active={route().current('dashboard')}
+                                        href={route('home')}
+                                        active={route().current('home')}
                                     >
                                         Registrar habitacion
                                     </NavLink>
@@ -127,8 +127,8 @@ export default function AdministrationNav({ header, children, auth }) {
                 >
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
+                            href={route('home')}
+                            active={route().current('home')}
                         >
                             Lista de usuarios
                         </ResponsiveNavLink>
@@ -136,24 +136,24 @@ export default function AdministrationNav({ header, children, auth }) {
 
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
+                            href={route('home')}
+                            active={route().current('home')}
                         >
                             Lista de empleados
                         </ResponsiveNavLink>
                     </div>
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
+                            href={route('home')}
+                            active={route().current('home')}
                         >
                             Dashboard
                         </ResponsiveNavLink>
                     </div>
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
+                            href={route('home')}
+                            active={route().current('home')}
                         >
                             Tipos de habitación
                         </ResponsiveNavLink>
@@ -162,14 +162,14 @@ export default function AdministrationNav({ header, children, auth }) {
                     {user && user.rol_id !=1 && (
                         <div className="space-y-1 pb-3 pt-2">
                             <ResponsiveNavLink
-                                href={route('dashboard')}
-                                active={route().current('dashboard')}
+                                href={route('home')}
+                                active={route().current('home')}
                             >
                                 Lista de reservaciones
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
-                                href={route('dashboard')}
-                                active={route().current('dashboard')}
+                                href={route('home')}
+                                active={route().current('home')}
                             >
                                 Registrar habitación
                             </ResponsiveNavLink>

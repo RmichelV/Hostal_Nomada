@@ -1,26 +1,31 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'; // Asegúrate de importar el layout correcto
+import welcome from '/resources/css/Welcome.module.css';
 
-export default function Dashboard() {
+export default function Home({ auth, laravelVersion, phpVersion, room_types }) {
+    // Coloca el console.log aquí para verificar los datos de room_types
+    console.log(room_types);
+
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Home
-                </h2>
-            }
-        >
-            <Head title="Dashboard" />
+        <>
+            <Head title="Welcome" />
+            <AuthenticatedLayout/>
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">
-                            You're logged in!
-                        </div>
+            {room_types.map((room_type, index) => (
+                <div className={`${welcome.container}`} key={index}>
+                    
+                        <img src={`img/${room_type.room_image}`} alt="Room Image" className={welcome.room_image} />
+                    
+                    <div className={`${welcome.text_container}`}>
+                        <h3>{room_type.name}</h3>
+                        <div>{room_type.description}</div>
+                        <div>{room_type.price}</div>    
+                        <button>
+                            Reservar
+                        </button>
                     </div>
                 </div>
-            </div>
-        </AuthenticatedLayout>
+            ))}
+        </>
     );
 }

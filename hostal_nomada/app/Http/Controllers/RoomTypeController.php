@@ -174,8 +174,8 @@ class RoomTypeController extends Controller
         $room_type->price = $request->input('price');
         $room_type->description = $request->input('description');
 
+        //eliminar la imagen anterior 
         if ($request->hasFile('room_image')) {
-            // Elimina la imagen anterior si es necesario
             if ($room_type->room_image) {
                 Storage::disk('public')->delete($room_type->room_image);
             }
