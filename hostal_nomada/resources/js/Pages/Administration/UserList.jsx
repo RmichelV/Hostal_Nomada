@@ -247,7 +247,6 @@ export default function UserList(props) {
                                     value={editData.nationality_id}
                                     onChange={(e) => setEditData('nationality_id', e.target.value)}
                                     >
-                                <option value="">Selecciona tu Nacionalidad</option>
                                 {nationalities.map(nationality=>[
                                     <option value={nationality.id}>{nationality.name}</option>
                                 ])}

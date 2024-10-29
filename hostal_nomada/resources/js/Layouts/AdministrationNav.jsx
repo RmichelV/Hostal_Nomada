@@ -31,8 +31,8 @@ export default function AdministrationNav({ header, children, auth }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
+                                    href={route('employees.index')}
+                                    active={route().current('employees.index')}
                                 >
                                     Lista de empleados
                                 </NavLink>
