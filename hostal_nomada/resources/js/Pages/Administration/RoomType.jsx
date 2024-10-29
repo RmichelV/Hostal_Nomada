@@ -61,6 +61,7 @@ export default function RoomType(props) {
             room_image: '',
         });
 
+    //eliminar 
     const {
         data: deleteData,
         setData: setDeleteData,
@@ -300,7 +301,7 @@ export default function RoomType(props) {
                             <PrimaryButton className="ms-4" disabled={addProcessing}>
                                 Agregar
                             </PrimaryButton>
-                            <PrimaryButton onClick={closeAgregarModal} className="ms-4">
+                            <PrimaryButton onClick={closeAgregarModal} className="ms-4" type="button">
                                 Cancelar
                             </PrimaryButton>
                         </div>
@@ -397,7 +398,7 @@ export default function RoomType(props) {
                             <PrimaryButton className="ms-4" disabled={editProcessing}>
                                 Guardar cambios
                             </PrimaryButton>
-                            <PrimaryButton onClick={closeEditarModal} className="ms-4">
+                            <PrimaryButton onClick={closeEditarModal} className="ms-4" type="button">
                                 Cancelar
                             </PrimaryButton>
                         </div>
