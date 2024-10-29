@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Models\Room_type;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -17,13 +18,22 @@ use App\Http\Controllers\UserController;
 
 
 Route::get('/', function () {
+    $room_types = Room_type::all();
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'room_types' => $room_types
     ]);
 });
+
+Route::get('/home', function () {
+    $room_types = Room_type::all();
+    return Inertia::render('Home',[
+        'room_types' => $room_types
+    ]);
+})->middleware(['auth', 'verified'])->name('home');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
