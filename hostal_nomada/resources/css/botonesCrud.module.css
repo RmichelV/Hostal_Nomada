@@ -1,0 +1,41 @@
+.addButton{
+    background-color: rgb(11, 146, 67);
+    padding: 10px;
+    border-radius: 20px;
+    color: white;
+    border: 3px solid gray;
+    margin: 0;
+}
+
+.EditButton{
+    background-color: rgb(54, 172, 231);
+    padding: 10px;
+    border-radius: 20px;
+    color: white;
+    border: 3px solid gray;
+    margin: 5px;
+    width: 100%;
+}
+
+.DeleteButton{
+    background-color: rgb(129, 21, 32);
+    padding: 10px;
+    border-radius: 20px;
+    color: white;
+    border: 3px solid gray;
+    margin: 5px;
+    width: 100%;
+}
+
+.image_room{
+    height: 20vh;
+    width: 100%;
+}
+
+.buttons{
+    display: flex;
+    flex-direction: column;
+}
+.tc{
+    text-align: center;
+}
