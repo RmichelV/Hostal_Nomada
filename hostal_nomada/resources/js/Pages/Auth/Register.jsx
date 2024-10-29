@@ -139,7 +139,7 @@ export default function Register({nationalities}) {
                         isFocused={true}
                         onChange={(e) => {
                             const value = e.target.value.replace(/[^0-9]/g, ''); 
-                            setData('identification_number', value);
+                            setData('phone', value);
                         }}
                         required
                     />
