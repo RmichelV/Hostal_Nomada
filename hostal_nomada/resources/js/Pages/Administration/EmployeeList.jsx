@@ -148,6 +148,9 @@ export default function EmployeeList(props) {
 
     let i = 0; 
 
+    //calculo del salario
+
+
     return (
         <div>
             <AuthenticatedLayout/>
@@ -179,12 +182,42 @@ export default function EmployeeList(props) {
                                             <Th>Nombre del empleado</Th>
                                             <Th>Fecha de contratación</Th>
                                             <Th>Turnos</Th>
-                                            <Th>Salario</Th>
+                                            <Th>Salario (Bs.)</Th>
+                                            <Th>Bono Antigüedad (Bs.) </Th>
+                                            <Th>Salario Final (Bs.)</Th>
                                             <Th>Acciones</Th>
                                         </Tr>
                                     </Thead>
                                     <Tbody>
-                                        {employees.map((employee) => (
+                                        {employees.map((employee) => {
+                                            const hd = employee.hire_date; 
+                                            const hdt = new Date(hd); 
+                                            const fa = new Date(); 
+                                            const antig = fa.getFullYear() - hdt.getFullYear(); 
+                                            let bono;
+                                            let final_salary;
+
+                                            if(antig>=2 && antig <=4){
+                                                bono = 2500 * 0.02;
+                                                final_salary =parseFloat( employee.salary) + bono;
+                                            } else if( antig >= 5 && antig <= 7){
+                                                bono = 2500 * 0.05;
+                                                final_salary =parseFloat( employee.salary) + bono;
+                                            }else if( antig >= 8 && antig <= 10){
+                                                bono = 2500 * 0.11;
+                                                final_salary =parseFloat( employee.salary) + bono;
+                                            }else if( antig >= 11 && antig <= 14){
+                                                bono = 2500 * 0.18;
+                                                final_salary =parseFloat( employee.salary) + bono;
+                                            }else if( antig >= 15 && antig <= 19){
+                                                bono = 2500 * 0.26;
+                                                final_salary =parseFloat( employee.salary) + bono;
+                                            }else{
+                                                bono = 2500 * 0.34;
+                                                final_salary =parseFloat( employee.salary) + bono;
+                                            }
+                                            
+                                            return(
                                             <Tr key={employee.id}>
                                                 <Td className={`${btnCrud.tc}`}>{i=i+1}</Td>
                                                 <Td className={`${btnCrud.tc}`}>
@@ -194,7 +227,10 @@ export default function EmployeeList(props) {
                                                 <Td className={`${btnCrud.tc}`}>
                                                     {shifts.find(shift => shift.id === employee.shift_id)?.name || 'No especificado'}
                                                 </Td>
-                                                <Td>{employee.salary}</Td>
+                                                <Td className={`${btnCrud.tc}`}>{employee.salary}</Td>
+                                                
+                                                <Td className={`${btnCrud.tc}`}> {bono} </Td>
+                                                <Td className={`${btnCrud.tc}`}> {final_salary} </Td>
                                                 <Td>
                                                     <div className={`${btnCrud.buttons}`}>
                                                         <button onClick={() => openEditarModal(employee)}  className={`${btnCrud.EditButton}`}>
@@ -206,7 +242,7 @@ export default function EmployeeList(props) {
                                                     </div>
                                                 </Td>
                                             </Tr>
-                                        ))}
+                                        )})}
                                     </Tbody>
                                 </Table>
                             </div>
