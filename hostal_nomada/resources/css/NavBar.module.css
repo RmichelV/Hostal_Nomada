@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Lobster&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
 .navbarBackground {
     background-color: #027d8c;
 }
@@ -18,15 +20,32 @@
         top: 50%; 
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: black;
-        color: #ff0000;
-        height: 20vh;
+        background-color: rgba(0, 0, 0, 0.69);
+        color: #ffffff;
+        height: 30vh;
         width: 70%;
 
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
+
+        overflow: hidden;
 }
 
+.title_up{
+    font-family: "Rubik", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: medium;
+    font-size: 5rem;
+}
+
+.title_down{
+    font-family: "Rubik", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: medium;
+    font-size: 1.5rem;
+}
 
