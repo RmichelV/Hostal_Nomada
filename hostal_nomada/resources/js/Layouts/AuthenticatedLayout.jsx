@@ -284,15 +284,13 @@ export default function AuthenticatedLayout({ header, children, auth }) {
                 <img src="img/LaPaz.png" alt="La Paz" className={Navbar.BannerLaPaz} id='bannerLaPaz' />
                 <div className={`${Navbar.title}`}>
                     <h1 className={Navbar.title_up}>
-                        HOSTAL NOMADA SUITS
+                        HOSTAL NOMADA SUITES
                     </h1>
                     <h2 className={`${Navbar.title_down}`}>
                         El mejor hostal ubicado en la ciudad maravilla La Paz - Bolivia
                     </h2>
                 </div>
             </main>
-            
-            
 
             {header && (
                 <header className="bg-white shadow">
