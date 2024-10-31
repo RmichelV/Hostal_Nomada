@@ -21,7 +21,7 @@ export default function AuthenticatedLayout({ header, children, auth }) {
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
                                 <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
+                                    <img src={'img/Logo_HN.png'} alt="" className={Navbar.logo} />
                                 </Link>
                             </div>
                             
@@ -46,7 +46,7 @@ export default function AuthenticatedLayout({ header, children, auth }) {
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
                                     href={route('reservations.index')}
-                                    active={route().current('reservation.index')}
+                                    active={route().current('reservations.index')}
                                 >
                                     Reservacion de habitaciones
                                 </NavLink>
@@ -200,10 +200,10 @@ export default function AuthenticatedLayout({ header, children, auth }) {
 
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route('home')}
-                            active={route().current('home')}
+                            href={route('reservations.index')}
+                            active={route().current('reservations.index')}
                         >
-                            Reservaciones
+                            Reservar habitaciones
                         </ResponsiveNavLink>
                     </div>
 
@@ -228,15 +228,15 @@ export default function AuthenticatedLayout({ header, children, auth }) {
                     {user && user.rol_id !=2 && (
                         <div className="space-y-1 pb-3 pt-2">
                             <ResponsiveNavLink
-                                href={route('home')}
-                                active={route().current('home')}
+                                href={route('administration')}
+                                active={route().current('administration')}
                             >
                                 Administración
                             </ResponsiveNavLink>
                         </div>
                     )}
 
-
+                {/**  menu inicio de sesion y edicion*/}
                     {user ? (
                         <div className="border-t border-gray-200 pb-1 pt-4">
                             <div className="px-4">
@@ -280,6 +280,7 @@ export default function AuthenticatedLayout({ header, children, auth }) {
                 </div>
             </nav>
             
+            {/** banner */}
             <main className={Navbar.mainTitle}>
                 <img src="img/LaPaz.png" alt="La Paz" className={Navbar.BannerLaPaz} id='bannerLaPaz' />
                 <div className={`${Navbar.title}`}>
