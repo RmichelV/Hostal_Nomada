@@ -122,6 +122,7 @@ export default function UserList(props) {
 
     return (
         <div>
+            <Head title="Lista de usuarios"/>
             <AuthenticatedLayout/>
             <AdministrationBar
                 header={

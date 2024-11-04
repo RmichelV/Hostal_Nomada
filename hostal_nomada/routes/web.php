@@ -49,12 +49,10 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 //agregaciones 
-
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('users',UserController::class);
     Route::resource('employees',EmployeeController::class);
     Route::resource('reservations', ReservationController::class);
-    Route::get('/Administration/ReservationList.index', [ReservationController::class, 'reservationList'])->name('reservationList');
     Route::resource('room_types',RoomTypeController::class);
     Route::resource('rooms',RoomController::class);
     Route::resource('employees',EmployeeController::class);

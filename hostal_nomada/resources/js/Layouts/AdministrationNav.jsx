@@ -40,8 +40,8 @@ export default function AdministrationNav({ header, children, auth }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
-                                    href={route('home')}
-                                    active={route().current('home')}
+                                    href={route('dashboard')}
+                                    active={route().current('dashboard')}
                                 >
                                     Dashboard
                                 </NavLink>
@@ -55,11 +55,13 @@ export default function AdministrationNav({ header, children, auth }) {
                                 </NavLink>
                             </div>
 
-                            {user && user.rol_id!=1 && (
+                            {user 
+                            && user.rol_id!=2 && 
+                            (
                                 <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                     <NavLink
-                                        href={route('home')}
-                                        active={route().current('home')}
+                                        href={route('reservations.index')}
+                                        active={route().current('reservations.index')}
                                     >
                                         Lista de reservaciones
                                     </NavLink>
@@ -127,8 +129,8 @@ export default function AdministrationNav({ header, children, auth }) {
                 >
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route('home')}
-                            active={route().current('home')}
+                            href={route('users.index')}
+                            active={route().current('users.index')}
                         >
                             Lista de usuarios
                         </ResponsiveNavLink>
@@ -136,24 +138,24 @@ export default function AdministrationNav({ header, children, auth }) {
 
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route('home')}
-                            active={route().current('home')}
+                            href={route('employees.index')}
+                            active={route().current('employees.index')}
                         >
                             Lista de empleados
                         </ResponsiveNavLink>
                     </div>
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route('home')}
-                            active={route().current('home')}
+                            href={route('dashboard')}
+                            active={route().current('dashboard')}
                         >
                             Dashboard
                         </ResponsiveNavLink>
                     </div>
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route('home')}
-                            active={route().current('home')}
+                            href={route('room_types.index')}
+                            active={route().current('room_types.index')}
                         >
                             Tipos de habitación
                         </ResponsiveNavLink>
@@ -162,8 +164,8 @@ export default function AdministrationNav({ header, children, auth }) {
                     {user && user.rol_id !=1 && (
                         <div className="space-y-1 pb-3 pt-2">
                             <ResponsiveNavLink
-                                href={route('home')}
-                                active={route().current('home')}
+                                href={route('reservations.index')}
+                                active={route().current('reservations.index')}
                             >
                                 Lista de reservaciones
                             </ResponsiveNavLink>

@@ -153,7 +153,10 @@ export default function EmployeeList(props) {
 
     return (
         <div>
-            <AuthenticatedLayout/>
+            <AuthenticatedLayout>
+                <Head title="Lista de empleados"/>
+            </AuthenticatedLayout>
+            
             <AdministrationBar
                 header={
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">

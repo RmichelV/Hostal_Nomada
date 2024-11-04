@@ -6,6 +6,7 @@ import UpdateProfileInformationForm from './Partials/UpdateProfileInformationFor
 
 export default function Edit({ mustVerifyEmail, status }) {
     return (
+        <>
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
@@ -14,6 +15,7 @@ export default function Edit({ mustVerifyEmail, status }) {
             }
         >
             <Head title="Profile" />
+        </AuthenticatedLayout>
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
@@ -34,6 +36,6 @@ export default function Edit({ mustVerifyEmail, status }) {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </>
     );
 }
