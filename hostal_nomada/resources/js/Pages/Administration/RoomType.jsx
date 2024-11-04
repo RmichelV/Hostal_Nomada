@@ -21,6 +21,7 @@ import btnCrud from '../../../css/botonesCrud.module.css';
 
 export default function RoomType(props) {
     const { room_types } = props;
+    const [roomTypes, setRoomTypes] = useState(props.room_types);
 
     // Estados del modal agregar 
     const [isAgregarOpen, setIsAgregarOpen] = useState(false);
@@ -84,7 +85,7 @@ export default function RoomType(props) {
             quantity: room_type.quantity,
             price: room_type.price,
             description: room_type.description,
-            room_image: '', 
+            room_image: room_type.room_image, 
         });
         setIsEditarOpen(true);
     };
@@ -123,17 +124,34 @@ export default function RoomType(props) {
         });
     };
 
-    // Función submit editar
     const submitEdit = (e) => {
         e.preventDefault();
-        put(route('room_types.update', editData.id), { 
-            data: editData,
-            onSuccess: () =>{
-                editReset('id', 'name', 'quantity', 'price','description', 'room_image'), 
-                setIsEditarOpen(false);
-            }  
+        console.log("Submit edit called"); 
+        console.log("EditData:", editData); 
+        const formData = new FormData();
+        Object.keys(editData).forEach(key => {
+            formData.append(key, editData[key]);
+        });
+        axios.post(route('room_types.update', editData.id), formData, {
+            headers: { 'X-HTTP-Method-Override': 'PUT' },
+        })
+        .then(() => {
+            // setRoomTypes(prevTypes => 
+            //     prevTypes.map(room_type => 
+            //         room_type.id === editData.id ? { ...room_type, ...editData } : room_type
+            //     )
+            // );
+            editReset('id', 'name', 'quantity', 'price', 'description', 'room_image');
+            setIsEditarOpen(false);
+        })
+        .catch(error => {
+            console.error(error);
         });
     };
+    
+
+
+
 
      // Función submit eliminar
     const submitDelete = (e) => {
@@ -182,7 +200,7 @@ export default function RoomType(props) {
                                         </Tr>
                                     </Thead>
                                     <Tbody>
-                                        {room_types.map((room_type) => (
+                                        {roomTypes.map((room_type) => (
                                             <Tr key={room_type.id}>
                                                 <Td className={`${btnCrud.tc}`}>{i=i+1}</Td>
                                                 <Td className={`${btnCrud.tc}`}>{room_type.name}</Td>
@@ -377,7 +395,7 @@ export default function RoomType(props) {
                             <InputError message={editErrors.description} className="mt-2" />
                         </div>
 
-                        {/* <div>
+                        <div>
                             <InputLabel htmlFor="room_image" value="Cargar imagen de la habitación:" />
                             <TextInput
                                 type="file"
@@ -387,13 +405,13 @@ export default function RoomType(props) {
                                 onChange={(e) => {
                                     const file = e.target.files[0];
                                     if (file && file.size < 5 * 1024 * 1024) {
-                                        setEditData('room_image', file);
+                                        setEditData('room_image', e.target.files[0]);
                                     } else {
                                         alert("El archivo debe ser menor a 5MB.");
                                     }
                                 }}
                             />
-                        </div> */}
+                        </div>
 
                         <div className="mt-4 flex items-center justify-end">
                             <PrimaryButton className="ms-4" disabled={editProcessing}>
