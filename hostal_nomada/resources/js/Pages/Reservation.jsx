@@ -112,6 +112,7 @@ export default function Reservation(props) {
 
     return (
         <div>
+            <Head title="Reservar"/>
             <AuthenticatedLayout/>
 
                 <div className="py">

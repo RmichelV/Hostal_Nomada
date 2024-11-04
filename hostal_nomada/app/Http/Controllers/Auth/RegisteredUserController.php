@@ -88,7 +88,7 @@ class RegisteredUserController extends Controller
             'name.regex' => 'Cada nombre debe comenzar con una letra mayúscula y estar seguido de letras minúsculas.',
             'last_name.regex' => 'Cada apellido debe comenzar con una letra mayúscula y estar seguido de letras minúsculas.',
             'identification_number.integer' => 'El número de identidad debe ser un numero entero',
-            'identification_number.digits_between' => 'El número de identidad debe contener entre 4 y 10 dígitos.',
+            'identification_number.digits_between' => 'El número de identidad debe contener entre 6 y 10 dígitos.',
             'nationality_id.exists' => 'La nacionalidad seleccionada no es válida.',
             'birthday.date' => 'La fecha de nacimiento debe ser una fecha válida.',
             'phone.regex' => 'El teléfono debe contener entre 6 y 10 dígitos.',

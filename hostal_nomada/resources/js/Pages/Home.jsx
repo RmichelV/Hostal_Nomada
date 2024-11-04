@@ -15,7 +15,19 @@ export default function Home({ auth, laravelVersion, phpVersion, room_types }) {
     }
     return (
         <>
-            <Head title="Welcome" />
+            <Head title="Home"/>
+             {/** banner */}
+             <main className={Navbar.mainTitle}>
+                <img src="img/LaPaz.png" alt="La Paz" className={Navbar.BannerLaPaz} id='bannerLaPaz' />
+                <div className={`${Navbar.title}`}>
+                    <h1 className={Navbar.title_up}>
+                        HOSTAL NOMADA SUITES
+                    </h1>
+                    <h2 className={`${Navbar.title_down}`}>
+                        El mejor hostal ubicado en la ciudad maravilla La Paz - Bolivia
+                    </h2>
+                </div>
+            </main>
             <AuthenticatedLayout
                 header={
                     <h2 className={`${welcome.title_h}`}>

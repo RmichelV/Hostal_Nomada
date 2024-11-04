@@ -149,6 +149,7 @@ export default function RoomType(props) {
 
     return (
         <div>
+            <Head title="Tipos de habitación"/>
             <AuthenticatedLayout/>
             <AdministrationBar
                 header={

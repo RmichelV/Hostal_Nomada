@@ -36,8 +36,8 @@ export default function AuthenticatedLayout({ header, children, auth }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
-                                    href={route('home')}
-                                    active={route().current('home')}
+                                    // href={route('home')}
+                                    // active={route().current('home')}
                                 >
                                     Restaurante
                                 </NavLink>
@@ -55,8 +55,8 @@ export default function AuthenticatedLayout({ header, children, auth }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
-                                    href={route('home')}
-                                    active={route().current('home')}
+                                    // href={route('home')}
+                                    // active={route().current('home')}
                                 >
                                     Contactos
                                 </NavLink>
@@ -209,8 +209,8 @@ export default function AuthenticatedLayout({ header, children, auth }) {
 
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route('home')}
-                            active={route().current('home')}
+                            // href={route('home')}
+                            // active={route().current('home')}
                         >
                             Restaurante
                         </ResponsiveNavLink>
@@ -218,8 +218,8 @@ export default function AuthenticatedLayout({ header, children, auth }) {
 
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route('home')}
-                            active={route().current('home')}
+                            // href={route('home')}
+                            // active={route().current('home')}
                         >
                             Contactos
                         </ResponsiveNavLink>
@@ -279,8 +279,9 @@ export default function AuthenticatedLayout({ header, children, auth }) {
                     )}
                 </div>
             </nav>
-            
-            {/** banner */}
+
+
+             {/** banner */}
             <main className={Navbar.mainTitle}>
                 <img src="img/LaPaz.png" alt="La Paz" className={Navbar.BannerLaPaz} id='bannerLaPaz' />
                 <div className={`${Navbar.title}`}>
@@ -292,7 +293,7 @@ export default function AuthenticatedLayout({ header, children, auth }) {
                     </h2>
                 </div>
             </main>
-
+            
             {header && (
                 <header className="bg-white shadow">
                     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
