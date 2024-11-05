@@ -51,7 +51,7 @@ export default function AdministrationNav({ header, children, auth }) {
                                     href={route('room_types.index')}
                                     active={route().current('room_types.index')}
                                 >
-                                    Tipos de habitaciones
+                                    Tipos de habitación
                                 </NavLink>
                             </div>
 

@@ -9,6 +9,9 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 
+//css 
+import ReservationsCss from '/resources/css/Reservations.module.css';
+
 export default function Reservation(props) {
     const { reservations, room_types, users} = props;
 
@@ -20,6 +23,7 @@ export default function Reservation(props) {
             errors: addErrors, 
             reset:addReset} = useForm({
                 room_type_id: '',
+                price:'',
                 number_of_rooms: '',
                 number_of_people: '',
                 check_in: '',
@@ -28,65 +32,71 @@ export default function Reservation(props) {
             });
 
 
-            const roomCapacityLimits = {
-                10: 1,
-                11: 2,
-                12: 3,
-                13: 3,
-                14: 2,
-                15: 2,
+    const roomPrice = (e) => {
+        const th = e.target.value 
+        setAddData('room_type_id',th)
+        console.log('este es el id del cuarto selecionado: ' + th)
+        room_types.map(room_type=>{
+            if(room_type.id == th){
+                console.log('este es el nombre de la habitacion seleccionada: '+ room_type.name);
+                setAddData({
+                    room_type_id: th, 
+                    price: room_type.price 
+                });
+            }
+        })
+    };
 
-            };
+    const numberPeople = (e)=>{
+        const th = addData.room_type_id
+        console.log( "tipo de habitacion id:" + th)
+        
+        // const ch =  setAddData('number_of_rooms', e.target.value.replace(/[^0-9]/g, ''))
 
-            // const handleRoomTypeChange = (e) => {
-            //     const selectedRoomTypeId = e.target.value; //no tocar 
+        const ch = e.target.value.replace(/[^0-9]/g, '');
+        
 
-            //     const numberOfRooms = addData.number_of_rooms;
-                
-            //     // console.log(selectedRoomTypeId);
+        room_types.map(room_type=>{
+            
+            if(th == room_type.id){
+                console.log(room_type.name)
+                console.log("cantidad de habitaciones: "+ ch)
+                let multiplier = 1;
+                if (room_type.name === "Simple") multiplier = 1;
+                else if (room_type.name === "Doble" || room_type.name === "Matrimonial" || room_type.name === "Suit") multiplier = 2;
+                else if (room_type.name === "Triple" || room_type.name === "Familiar") multiplier = 3;
+                if (ch) {
+                    const num = ch * multiplier;
+                    setAddData('number_of_people', num);
                     
-            //     const selectedRoomType = room_types.find(room => room.id === parseInt(selectedRoomTypeId)); //no tocar
-                
-            //     setAddData('room_type_id', selectedRoomTypeId); //no tocar 
-
-            //     if (selectedRoomType) { // no tocar 
-            //         setAddData('price', selectedRoomType.price);
-
-                    
-            //     } 
-
-            // };
-
-            const handleRoomTypeChange = (e) => {
-                const selectedRoomTypeId = e.target.value; // Esto es el id seleccionado en el input, en formato string.
-            
-                const selectedRoomType = room_types.find(room => room.id === parseInt(selectedRoomTypeId)); // Encuentra el objeto que coincide
-            
-                // Aquí puedes acceder al id del
-                const numberOfRooms = addData.number_of_rooms; 
-                const roomId = selectedRoomType?.id; // Esto devolverá el id como un número o `undefined` si no se encontró
-            
-                setAddData('room_type_id', selectedRoomTypeId); // Actualiza el room_type_id en el setAddData.
-            
-                if (selectedRoomType) { // Si se encuentra el tipo de habitación
-                    setAddData('price', selectedRoomType.price); 
-                    
-                
                 }
+            }
+        })
+    }
 
-                const checkIn = new Date(addData.check_in);
-                const checkOut = new Date(addData.check_out);
-                
-                const diffTime = Math.abs(checkOut - checkIn); // Resta en milisegundos
-                const total_dias = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convertir a días
-                
-                const tp = total_dias * 
-                setAddData('total_price',tp);
+    const precioTotal = () => {
+        const { check_in, check_out, price, number_of_people, number_of_rooms } = addData;
+        
 
-            };
+            // console.log ('entrada: '=addData.check_in)
+            // console.log ('salida: '= checkout)
+            // console.log ('precio u: '=addData.price)
+            // console.log ('personas: '=addData.number_of_people)
+            // console.log ('habitaciones: '=addData.number_of_people)
 
+        if (check_in && check_out) {
+            const startDate = new Date(check_in);
+            const endDate = new Date(check_out);
+            const diffInTime = endDate - startDate;
+            const diffInDays = diffInTime / (1000 * 60 * 60 * 24);
+            // setAddData('diasTotales', diffInDays);
+            const total_price = price * number_of_rooms * number_of_people  * diffInDays
 
-
+            setAddData('total_price', total_price)
+        } else {
+            setAddData('total_price', 0); 
+        }
+    };
 
     // Función submit agregar
     const submitAdd = (e) => {
@@ -113,7 +123,13 @@ export default function Reservation(props) {
     return (
         <div>
             <Head title="Reservar"/>
-            <AuthenticatedLayout/>
+            <AuthenticatedLayout
+                header={
+                    <h2 className={`${ReservationsCss.title_h}`}>
+                        Reserva aquí
+                    </h2>
+                }
+            />
 
                 <div className="py">
                     <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -127,7 +143,7 @@ export default function Reservation(props) {
                                         name="room_type_id" 
                                         id="room_type_id"
                                         value={addData.room_type_id}
-                                        onChange={handleRoomTypeChange} 
+                                        onChange={roomPrice} 
                                     >
                                         <option value="">Seleccione un tipo de habitación</option>
                                         {room_types.map(room_type => (
@@ -147,12 +163,11 @@ export default function Reservation(props) {
                                         value={addData.price}
                                         className="mt-1 block w-full"
                                         autoComplete="price"
-                                        readOnly // Esto evita que el usuario pueda editarlo directamente
+                                        readOnly
                                     />
                                     <InputError message={addErrors.price} className="mt-2" />
                                 </div>
                                 
-
                                 <div>
                                     <InputLabel htmlFor="number_of_rooms" value="Cantidad de habitaciones: " />
                                     <TextInput
@@ -163,12 +178,12 @@ export default function Reservation(props) {
                                         className="mt-1 block w-full"
                                         autoComplete="number_of_rooms"
                                         isFocused={true}
-                                        onChange={(e) => setAddData('number_of_rooms', e.target.value.replace(/[^0-9]/g, ''))}
+                                        onChange={numberPeople}
                                         required
                                     />
                                     <InputError message={addErrors.number_of_rooms} className="mt-2" />
                                 </div>
-
+                                
                                 <div>
                                     <InputLabel htmlFor="number_of_people" value="Cantidad de personas: " />
                                     <input 
@@ -176,7 +191,7 @@ export default function Reservation(props) {
                                         name="number_of_people" 
                                         id="number_of_people" 
                                         value={addData.number_of_people} 
-                                        onChange={(e) => setAddData('number_of_people', e.target.value.replace(/[^0-9]/g, ''))}
+                                        readOnly
                                     />
                                     <InputError message={addErrors.number_of_people} className="mt-2" />
                                 </div>
@@ -206,6 +221,7 @@ export default function Reservation(props) {
 
                                     <InputError message={addErrors.check_in} className="mt-2" />
                                 </div>
+
                                 <div>
                                     <InputLabel htmlFor="check_out" value="Fecha de salida:" />
 
@@ -224,8 +240,9 @@ export default function Reservation(props) {
                                             if (year.length > 4) {
                                                 return; 
                                             }
-                                            setAddData('check_out', dateValue); 
-                                        }}
+                                            setAddData('check_out', dateValue);    
+                                            precioTotal();       
+                                        }} 
                                         required
                                     />
 
@@ -242,27 +259,27 @@ export default function Reservation(props) {
                                         className="mt-1 block w-full"
                                         autoComplete="total_price"
                                         isFocused={true}
-                                        onChange={(e) => setAddData('total_price', e.target.value.replace(/[^0-9]/g, ''))}
+                                        // onChange={(e) => setAddData('total_price', e.target.value.replace(/[^0-9]/g, ''))}
                                         required
+                                        readOnly
                                     />
                                     <InputError message={addErrors.total_price} className="mt-2" />
                                 </div>
 
                                 <div>
-                                    <img src={'img/qr.jpg'} alt="" />
+                                    <img src={'/public/img/qr.jpeg'} alt="" />
                                 </div>
 
-                        <div className="mt-4 flex items-center justify-end">
-                            <PrimaryButton className="ms-4" disabled={addProcessing}>
-                                Agregar
-                            </PrimaryButton>
-
-                        </div>
-                    </form>
-                            </div>
+                                <div className="mt-4 flex items-center justify-end">
+                                    <PrimaryButton className="ms-4" disabled={addProcessing}>
+                                        Agregar
+                                    </PrimaryButton>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
     );
 }

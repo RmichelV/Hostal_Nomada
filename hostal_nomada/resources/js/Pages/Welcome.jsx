@@ -1,14 +1,19 @@
 import { Head } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'; // Asegúrate de importar el layout correcto
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'; 
 import welcome from '/resources/css/Welcome.module.css';
+
 export default function Welcome({ auth, laravelVersion, phpVersion, room_types }) {
     
-    console.log(room_types);
+// console.log(room_types);
+const user = auth ? auth.user : null;
 
-    function reservar(){
-        window.location.href = 'login'; //
+console.log('holaaa : '+ user);  
+
+    function reservar() {
+        if (!user) {
+            window.location.href = '/reservations'; 
+        }
     }
-
     return (
         <>
             <Head title="Welcome" />
