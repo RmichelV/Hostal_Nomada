@@ -15,6 +15,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RoomTypeController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RestaurantController;
 
 
 Route::get('/', function () {
@@ -61,6 +62,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::resource('nationalities',NationalityController::class);
 Route::resource('rols',RolController::class);
 Route::resource('shifts',ShiftController::class);
+Route::resource('restaurants',RestaurantController::class);
 
 Route::get('Administration',function(){
 return Inertia::render('Administration');

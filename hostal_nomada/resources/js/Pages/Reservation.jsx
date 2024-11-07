@@ -11,6 +11,7 @@ import TextInput from '@/Components/TextInput';
 
 //css 
 import ReservationsCss from '/resources/css/Reservations.module.css';
+import { data } from 'autoprefixer';
 
 export default function Reservation(props) {
     const { reservations, room_types, users} = props;
@@ -31,72 +32,142 @@ export default function Reservation(props) {
                 total_price: '',
             });
 
-
     const roomPrice = (e) => {
         const th = e.target.value 
-        setAddData('room_type_id',th)
+        setAddData('room_type_id',th) 
         console.log('este es el id del cuarto selecionado: ' + th)
         room_types.map(room_type=>{
             if(room_type.id == th){
                 console.log('este es el nombre de la habitacion seleccionada: '+ room_type.name);
                 setAddData({
                     room_type_id: th, 
-                    price: room_type.price 
+                    price: room_type.price,
+                    number_of_rooms:'',
+                    number_of_people:'',
+                    check_in:'',
+                    check_out:'',
                 });
             }
         })
     };
 
-    const numberPeople = (e)=>{
-        const th = addData.room_type_id
-        console.log( "tipo de habitacion id:" + th)
-        
-        // const ch =  setAddData('number_of_rooms', e.target.value.replace(/[^0-9]/g, ''))
+    // const numberPeople = (e) => {
+    //     console.log("valor ingresado: " + e.target.value); // Muestra el valor actual del input
+    //     setAddData((prevData) => ({ ...prevData, number_of_rooms: e.target.value.replace(/[^0-9]/g, '') }));
+    // };
+    const numberPeople = (e) => {
+        let value = e.target.value.replace(/[^0-9]/g, ''); // Eliminar caracteres no numéricos
+    
+        // Verificar si el valor es uno de los permitidos
+        if (value === "" || value === "1" || value === "2" || value === "3") {
+            console.log("valor ingresado: " + value); // Muestra el valor actual del input
+            setAddData((prevData) => ({ ...prevData, number_of_rooms: value }));
+        } else {
+            // Si el valor no es válido, no hacer nada o resetear el valor a "1"
+            console.log("Valor no válido, solo 1, 2 o 3 son permitidos");
+        }
+    };
 
-        const ch = e.target.value.replace(/[^0-9]/g, '');
-        
+    // Este useEffect se ejecutará cada vez que `addData.number_of_rooms` cambie
+    useEffect(() => {
+        const rt = addData.room_type_id
+        console.log("valor actualizado en addData.number_of_rooms:", addData.number_of_rooms);
 
         room_types.map(room_type=>{
-            
-            if(th == room_type.id){
-                console.log(room_type.name)
-                console.log("cantidad de habitaciones: "+ ch)
-                let multiplier = 1;
-                if (room_type.name === "Simple") multiplier = 1;
-                else if (room_type.name === "Doble" || room_type.name === "Matrimonial" || room_type.name === "Suit") multiplier = 2;
-                else if (room_type.name === "Triple" || room_type.name === "Familiar") multiplier = 3;
-                if (ch) {
-                    const num = ch * multiplier;
-                    setAddData('number_of_people', num);
-                    
+            if(rt==room_type.id){
+                if(room_type.name === "Simple"){
+                    const nr = addData.number_of_rooms * 1
+                    setAddData('number_of_people',nr)
+                } else if (room_type.name === "Doble"){
+                    const nr = addData.number_of_rooms * 2
+                    setAddData('number_of_people',nr)
+                }else if (room_type.name === "Triple" || room_type.name === "Familiar" ){
+                    const nr = addData.number_of_rooms * 3
+                    setAddData('number_of_people',nr)
                 }
             }
         })
-    }
+    }, [addData.number_of_rooms]);
 
-    const precioTotal = () => {
-        const { check_in, check_out, price, number_of_people, number_of_rooms } = addData;
-        
-
-            // console.log ('entrada: '=addData.check_in)
-            // console.log ('salida: '= checkout)
-            // console.log ('precio u: '=addData.price)
-            // console.log ('personas: '=addData.number_of_people)
-            // console.log ('habitaciones: '=addData.number_of_people)
-
-        if (check_in && check_out) {
-            const startDate = new Date(check_in);
-            const endDate = new Date(check_out);
-            const diffInTime = endDate - startDate;
-            const diffInDays = diffInTime / (1000 * 60 * 60 * 24);
-            // setAddData('diasTotales', diffInDays);
-            const total_price = price * number_of_rooms * number_of_people  * diffInDays
-
-            setAddData('total_price', total_price)
-        } else {
-            setAddData('total_price', 0); 
+    ////// no tocar  nada de arriba 
+//check in
+    const checkIn = (e) => {
+        const dateValue = e.target.value;
+        const [year, month, day] = dateValue.split("-");
+    
+        // Validamos que el año no sea mayor a 4 caracteres
+        if (year.length > 4) {
+            return;
         }
+    
+        // Actualizamos el estado con el nuevo valor de check_out
+        setAddData((prevData) => ({ ...prevData, check_in: dateValue }));
     };
+    
+    // Usamos el useEffect para monitorear el valor de check_out y mostrarlo cuando cambia
+    useEffect(() => {
+        console.log("valor actualizado en check_out:", addData.check_in);
+    }, [addData.check_in]);
+
+//check_out 
+    const checkOut = (e) => {
+        const dateValue = e.target.value;
+        const [year, month, day] = dateValue.split("-");
+    
+        // Validamos que el año no sea mayor a 4 caracteres
+        if (year.length > 4) {
+            return;
+        }
+    
+        // Actualizamos el estado con el nuevo valor de check_out
+        setAddData((prevData) => ({ ...prevData, check_out: dateValue }));
+    };
+    
+    // Usamos el useEffect para monitorear el valor de check_out y mostrarlo cuando cambia
+    useEffect(() => {
+        console.log("valor actualizado en check_out:", addData.check_out);
+    }, [addData.check_out]);
+
+    const [showDivs, setShowDivs] = useState(false);
+
+    //precioTotal de las habitaciones
+    const calcular = (e) => {
+
+        const pU = addData.price
+        const nR = addData.number_of_rooms;
+        const nP = addData.number_of_people;
+        const cI = new Date(addData.check_in);
+        const cO = new Date(addData.check_out);
+        const calcularDiferenciaDias = (fechaInicio, fechaFin) => {
+            // Calcula la diferencia en milisegundos
+            const diferenciaMs = fechaFin - fechaInicio;
+        
+            // Convierte de milisegundos a días
+            const diferenciaDias = Math.floor(diferenciaMs / (1000 * 60 * 60 * 24));
+        
+            return diferenciaDias;
+        };
+        
+        const diasDiferencia = calcularDiferenciaDias(cI, cO);
+        
+        const precioT = pU * nP * diasDiferencia
+        // setAddData('total_price',precioT);
+        setAddData((prevData) => ({ ...prevData, total_price: precioT }));
+
+        
+        if(precioT>0){
+            setShowDivs(!showDivs);
+        }else if (precioT<= 0){
+            setShowDivs(false);
+            alert("Agregue datos correctos por favor")
+        }
+    }
+    useEffect(() => {
+        console.log("Total Price:", addData.total_price);
+        console.log("Show Divs:", showDivs);
+    }, [addData.total_price, showDivs]);
+
+    
 
     // Función submit agregar
     const submitAdd = (e) => {
@@ -107,7 +178,10 @@ export default function Reservation(props) {
         } else if (!addData.number_of_people) {
             alert("Por favor, seleccione una cantidad de personas.");
             return; 
-        } else {
+        } else if (!addData.total_price) {
+            alert("Por favor, presione calcular para ver el precio total");
+            return; 
+        }else {
             
         }
         post(route('reservations.store'), {    
@@ -207,15 +281,7 @@ export default function Reservation(props) {
                                         className="mt-1 block w-full"
                                         autoComplete="check_in"
                                         isFocused={true}
-                                        onChange={(e) => {
-                                            const dateValue = e.target.value;
-                                            const [year, month, day] = dateValue.split("-");
-
-                                            if (year.length > 4) {
-                                                return; 
-                                            }
-                                            setAddData('check_in', dateValue); 
-                                        }}
+                                        onChange={checkIn}
                                         required
                                     />
 
@@ -233,20 +299,17 @@ export default function Reservation(props) {
                                         className="mt-1 block w-full"
                                         autoComplete="check_out"
                                         isFocused={true}
-                                        onChange={(e) => {
-                                            const dateValue = e.target.value;
-                                            const [year, month, day] = dateValue.split("-");
-
-                                            if (year.length > 4) {
-                                                return; 
-                                            }
-                                            setAddData('check_out', dateValue);    
-                                            precioTotal();       
-                                        }} 
+                                        onChange={checkOut} 
                                         required
                                     />
 
                                     <InputError message={addErrors.check_out} className="mt-2" />
+                                </div>
+                                
+                                <div className="mt-4 flex items-center justify-end">
+                                    <PrimaryButton className="ms-4" onClick = {calcular} type="button">
+                                        Calcular precio
+                                    </PrimaryButton>
                                 </div>
                                 
                                 <div>
@@ -259,22 +322,28 @@ export default function Reservation(props) {
                                         className="mt-1 block w-full"
                                         autoComplete="total_price"
                                         isFocused={true}
-                                        // onChange={(e) => setAddData('total_price', e.target.value.replace(/[^0-9]/g, ''))}
                                         required
                                         readOnly
                                     />
                                     <InputError message={addErrors.total_price} className="mt-2" />
                                 </div>
+                                
+                                    
+                                {showDivs && (
+                                    <>
+                                        <div className={ReservationsCss.qR}>
+                                            <img src={'img/qr.jpeg'} alt="" />
+                                            <InputLabel htmlFor="precioTotal" value={"Precio total: "+addData.total_price} />
+                                        </div>
 
-                                <div>
-                                    <img src={'/public/img/qr.jpeg'} alt="" />
-                                </div>
-
-                                <div className="mt-4 flex items-center justify-end">
-                                    <PrimaryButton className="ms-4" disabled={addProcessing}>
-                                        Agregar
-                                    </PrimaryButton>
-                                </div>
+                                        <div className="mt-4 flex items-center justify-end">
+                                        <PrimaryButton className="ms-4" disabled={addProcessing}>
+                                            Reservar
+                                        </PrimaryButton>
+                                        </div>
+                                    </>
+                                )}
+                                    
                             </form>
                         </div>
                     </div>

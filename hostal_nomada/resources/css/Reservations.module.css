@@ -45,3 +45,13 @@
     border-radius: 20px;
     margin-top: 20px;
 }
+
+.qR{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.qR img{
+    width: 40%;
+}
