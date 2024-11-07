@@ -1,26 +1,34 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'; 
+import welcome from '/resources/css/Welcome.module.css';
 
-export default function Restaurant() {
+export default function Restaurant({ auth, laravelVersion, phpVersion, restaurants }) {
+    
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Restaurante
-                </h2>
-            }
-        >
-            <Head title="Restaurante" />
+        <>
+            <Head title="Restaurant" />
+            <AuthenticatedLayout
+            
+                header={
+                    <h2 className={`${welcome.title_h}`}>
+                        Restaurant - Menu
+                    </h2>
+                }
+            >
+                
+            </AuthenticatedLayout>
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">
-                            You're logged in!
-                        </div>
+            {restaurants.map((restaurant, menu) => (
+                <div className={`${welcome.container}`} key={menu}>
+                    
+                        <img src={`img/${restaurant.food_image}`} alt="Room Image" className={welcome.room_image} />
+                    
+                    <div className={`${welcome.text_container}`}>
+                        <h3 className={welcome.room_title}>{restaurant.name}</h3>
+                        <div className={welcome.room_description}>{restaurant.description}</div>
                     </div>
                 </div>
-            </div>
-        </AuthenticatedLayout>
+            ))}
+        </>
     );
 }

@@ -11,7 +11,7 @@ use App\Models\Room_type;
 use App\Models\User;
 use Inertia\Inertia;
 use Validator;
-
+use Illuminate\Support\Facades\Auth;
 class ReservationController extends Controller
 {
     /**
@@ -57,11 +57,13 @@ class ReservationController extends Controller
             'check_out' => [
                 'required',
                 'date',
+                'after:check_in',
             ]
             
         ],[
             'check_in.required'=>'Debe introducir una fecha',
-            'check_in.after_or_equal'=>'La fecha debe ser como minimo hoy o posteior'
+            'check_in.after_or_equal'=>'La fecha debe ser como minimo hoy o posteior',
+            'check_out.after'=>'La fecha ingresada debe ser posterior a la fecha de ingreso'
         ]);
 
         if ($validator->fails()) {
@@ -72,7 +74,9 @@ class ReservationController extends Controller
 
         $reservation = new Reservation();
 
-        $reservation->user_id = $request->input('user_id');
+        $user_id = Auth::User()->id;
+        
+        $reservation->user_id = $user_id;
         $reservation->room_type_id = $request->input('room_type_id');
         $reservation->number_of_rooms = $request->input('number_of_rooms');
         $reservation->number_of_people = $request->input('number_of_people');

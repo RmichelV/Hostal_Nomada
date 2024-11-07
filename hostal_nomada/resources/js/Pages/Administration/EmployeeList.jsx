@@ -350,24 +350,18 @@ export default function EmployeeList(props) {
                 <div className="p-6">
                     <h2 className="font-semibold">Editar Empleado</h2>
                     <form onSubmit={submitEdit} encType="multipart/form-data">
-                        
                         <div>
                             <InputLabel htmlFor="user_id" value="Usuario:" />
 
-                            <div>
-                                <InputLabel htmlFor="user_id" value="Usuario:" />
-
-                                <select name="user_id" 
-                                        id="user_id"
-                                        value={editData.user_id}
-                                        onChange={(e) => setEditData('user_id', e.target.value)}
-                                        >
-                                    {users.map(user=>[
-                                        <option value={user.id}>{user.name}</option>
-                                    ])}
-                                </select>
-
-                            </div>
+                            <select name="user_id" 
+                                    id="user_id"
+                                    value={editData.user_id}
+                                    onChange={(e) => setEditData('user_id', e.target.value)}
+                                    >
+                                {users.map(user=>[
+                                    <option value={user.id}>{user.name}</option>
+                                ])}
+                            </select>
 
                         </div>
 

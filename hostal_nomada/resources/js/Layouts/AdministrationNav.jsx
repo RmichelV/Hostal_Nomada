@@ -51,7 +51,15 @@ export default function AdministrationNav({ header, children, auth }) {
                                     href={route('room_types.index')}
                                     active={route().current('room_types.index')}
                                 >
-                                    Tipos de habitaciones
+                                    Tipos de habitación
+                                </NavLink>
+                            </div>
+                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink
+                                    href={route('restaurants.index')}
+                                    active={route().current('restaurants.index')}
+                                >
+                                    Restaurant
                                 </NavLink>
                             </div>
 
@@ -158,6 +166,14 @@ export default function AdministrationNav({ header, children, auth }) {
                             active={route().current('room_types.index')}
                         >
                             Tipos de habitación
+                        </ResponsiveNavLink>
+                    </div>
+                    <div className="space-y-1 pb-3 pt-2">
+                        <ResponsiveNavLink
+                            href={route('restaurants.index')}
+                            active={route().current('restaurants.index')}
+                        >
+                            Restaurant
                         </ResponsiveNavLink>
                     </div>
 
