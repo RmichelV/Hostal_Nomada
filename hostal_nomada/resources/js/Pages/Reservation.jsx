@@ -334,6 +334,7 @@ export default function Reservation(props) {
                                         <div className={ReservationsCss.qR}>
                                             <img src={'img/qr.jpeg'} alt="" />
                                             <InputLabel htmlFor="precioTotal" value={"Precio total: "+addData.total_price} />
+                                            <InputLabel htmlFor="precioTotal" value="Concepto: Reservación de habitaciones" />
                                         </div>
 
                                         <div className="mt-4 flex items-center justify-end">
@@ -343,7 +344,6 @@ export default function Reservation(props) {
                                         </div>
                                     </>
                                 )}
-                                    
                             </form>
                         </div>
                     </div>

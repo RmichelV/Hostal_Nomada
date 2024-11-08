@@ -167,10 +167,5 @@ class RestaurantController extends Controller
         return Redirect::back()->with('message', 'Plato actualizada correctamente');
     }
 
-    public function menu(){
-        $restaurants = Restaurant::all();
-
-        return Inertia::render('Restaurant', [
-            'restaurants' => $restaurants]);
-    }
+    
 }

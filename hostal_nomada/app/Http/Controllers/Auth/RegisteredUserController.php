@@ -50,7 +50,8 @@ class RegisteredUserController extends Controller
             'identification_number' => [
                 'required',
                 'integer',
-                'digits_between:6,10',],
+                'digits_between:6,10',
+                'regex:/^(?!0+$)\d+$/',],
             'nationality_id' => [
                 'required',
                 'exists:nationalities,id'],
@@ -69,7 +70,8 @@ class RegisteredUserController extends Controller
                 },],  
             'phone'=>[
                 'nullable',
-                'regex:/^[0-9]{6,10}$/'],
+                'regex:/^[0-9]{6,10}$/',
+                'regex:/^(?!0+$)\d+$/',],
             'email' => [
                 'required', 
                 'string', 
@@ -91,7 +93,7 @@ class RegisteredUserController extends Controller
             'identification_number.digits_between' => 'El número de identidad debe contener entre 6 y 10 dígitos.',
             'nationality_id.exists' => 'La nacionalidad seleccionada no es válida.',
             'birthday.date' => 'La fecha de nacimiento debe ser una fecha válida.',
-            'phone.regex' => 'El teléfono debe contener entre 6 y 10 dígitos.',
+            'phone.regex' => 'El teléfono debe contener entre 6 y 10 dígitos y no ser sollo ceros',
             'email.email' => 'El correo electrónico debe ser una dirección válida.',
             'email.max' => 'El correo electrónico no debe superar los 255 caracteres.',
             'email.unique' => 'El correo electrónico ya está en uso.',

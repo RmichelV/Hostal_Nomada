@@ -91,7 +91,8 @@ class UserController extends Controller
             'identification_number' => [
                 'required',
                 'integer',
-                'digits_between:4,10',],
+                'digits_between:4,10',
+                'regex:/^(?!0+$)\d+$/',],
             'birthday' => [
                 'date',
                 function ($attribute, $value, $fail) {
@@ -107,7 +108,8 @@ class UserController extends Controller
                 },],  
             'phone'=>[
                 'nullable',
-                'regex:/^[0-9]{6,10}$/'],
+                'digits_between:6,10',
+                'regex:/^(?!0+$)\d+$/',],
             'email' => [
                 'required', 
                 'string', 
@@ -121,9 +123,11 @@ class UserController extends Controller
                     'last_name.regex' => 'Cada apellido debe comenzar con una letra mayúscula y estar seguido de letras minúsculas.',
                     'identification_number.integer' => 'El número de identidad debe ser un numero entero',
                     'identification_number.digits_between' => 'El número de identidad debe contener entre 4 y 10 dígitos.',
+                    'identification_number.regex'=>'No puede ser solo ceros en el numero de identificación',
                     'nationality_id.exists' => 'La nacionalidad seleccionada no es válida.',
                     'birthday.date' => 'La fecha de nacimiento debe ser una fecha válida.',
-                    'phone.regex' => 'El teléfono debe contener entre 6 y 10 dígitos.',
+                    'phone.digits_between' => 'El teléfono debe contener entre 6 y 10 dígitos.',
+                    'phone.regex'=>'No puede ser solo ceros en el numero de telefono',
                     'email.email' => 'El correo electrónico debe ser una dirección válida.',
                     'email.max' => 'El correo electrónico no debe superar los 255 caracteres.',
                     'email.unique' => 'El correo electrónico ya está en uso.',
