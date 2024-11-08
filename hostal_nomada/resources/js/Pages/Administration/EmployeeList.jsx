@@ -215,8 +215,11 @@ export default function EmployeeList(props) {
                                             }else if( antig >= 15 && antig <= 19){
                                                 bono = 2500 * 0.26;
                                                 final_salary =parseFloat( employee.salary) + bono;
-                                            }else{
+                                            }else if( antig>= 20){
                                                 bono = 2500 * 0.34;
+                                                final_salary =parseFloat( employee.salary) + bono;
+                                            } else {
+                                                bono = 0;
                                                 final_salary =parseFloat( employee.salary) + bono;
                                             }
                                             

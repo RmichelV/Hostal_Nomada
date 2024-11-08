@@ -39,6 +39,7 @@
     font-weight: 500;
     font-style: medium;
     font-size: 5rem;
+    text-align: center;
 }
 
 .title_down{
@@ -47,9 +48,16 @@
     font-weight: 500;
     font-style: medium;
     font-size: 1.5rem;
+    text-align: center;
 }
 
 
 .logo { 
     width: 20vh;
+}
+
+@media(max-width:920px) {
+    .title_up{
+        font-size: 4rem;
+    }
 }
