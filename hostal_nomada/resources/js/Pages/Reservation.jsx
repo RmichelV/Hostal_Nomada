@@ -152,14 +152,16 @@ export default function Reservation(props) {
         
         const precioT = pU * nP * diasDiferencia
         // setAddData('total_price',precioT);
-        setAddData((prevData) => ({ ...prevData, total_price: precioT }));
+        // setAddData((prevData) => ({ ...prevData, total_price: precioT }));
 
         
         if(precioT>0){
+            setAddData((prevData) => ({ ...prevData, total_price: precioT }));
             setShowDivs(!showDivs);
         }else if (precioT<= 0){
+            setAddData((prevData) => ({ ...prevData, total_price: 0 }));
             setShowDivs(false);
-            alert("Agregue datos correctos por favor")
+            alert("Por favor agregue datos correctos en: numero de habitaciones y fechas de ingreso y salida")
         }
     }
     useEffect(() => {
