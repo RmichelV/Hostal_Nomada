@@ -17,7 +17,11 @@ export default function Restaurant({ auth, laravelVersion, phpVersion, restauran
             >
                 
             </AuthenticatedLayout>
-
+            <header className="bg-white shadow">
+                    <div className={`mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 ${welcome.title_h}`}>
+                        Nuestro Menu  
+                    </div>
+            </header>
             {restaurants.map((restaurant, menu) => (
                 <div className={`${welcome.container}`} key={menu}>
                     

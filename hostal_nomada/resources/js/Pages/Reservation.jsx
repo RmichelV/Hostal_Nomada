@@ -200,12 +200,18 @@ export default function Reservation(props) {
         <div>
             <Head title="Reservar"/>
             <AuthenticatedLayout
-                header={
-                    <h2 className={`${ReservationsCss.title_h}`}>
-                        Reserva aquí
-                    </h2>
-                }
+                // header={
+                //     <h2 className={`${ReservationsCss.title_h}`}>
+                //         Reserva aquí
+                //     </h2>
+                // }
             />
+
+            <header className="bg-white shadow">
+                    <div className={`mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 ${ReservationsCss.title_h}`}>
+                        Reserva Aquí
+                    </div>
+            </header>
 
                 <div className="py">
                     <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">

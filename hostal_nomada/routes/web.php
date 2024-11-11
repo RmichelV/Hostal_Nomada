@@ -60,15 +60,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('rooms',RoomController::class);
     Route::resource('employees',EmployeeController::class);
     Route::resource('restaurants',RestaurantController::class);
+    Route::get('Administration',function(){
+        return Inertia::render('Administration');
+        })->name('administration');
+    Route::resource('nationalities',NationalityController::class);
+    Route::resource('rols',RolController::class);
+    Route::resource('shifts',ShiftController::class);
+
+
 });
 
-Route::resource('nationalities',NationalityController::class);
-Route::resource('rols',RolController::class);
-Route::resource('shifts',ShiftController::class);
-
-Route::get('Administration',function(){
-return Inertia::render('Administration');
-})->name('administration');
+// Route::middleware(['auth', 'rolmiddleware: 1'])->group(function () {
+//     Route::resource('room_types', RoomTypeController::class);
+// });
 
 Route::get('Restaurant', function(){
     $restaurants = Restaurant::all();

@@ -23,14 +23,23 @@ export default function DeleteUserForm({ className = '' }) {
         password: '',
     });
 
+    
     const confirmUserDeletion = () => {
         setConfirmingUserDeletion(true);
     };
-
+    
+    const [customErrorMessage, setCustomErrorMessage] = useState('');
+    
     const deleteUser = (e) => {
         e.preventDefault();
 
         destroy(route('profile.destroy'), {
+
+            onError: () => {
+                // Establece el mensaje personalizado directamente
+                setCustomErrorMessage('La contraseña es incorrecta.');
+                passwordInput.current.focus(); // Mueve el foco al input de la contraseña
+            },
             preserveScroll: true,
             onSuccess: () => closeModal(),
             onError: () => passwordInput.current.focus(),
@@ -97,11 +106,16 @@ export default function DeleteUserForm({ className = '' }) {
                             isFocused
                             placeholder="Escribe aquí tu contraseña"
                         />
-
+                        {/* 
                         <InputError
                             message={errors.password}
                             className="mt-2"
-                        />
+                        /> */}
+                        {customErrorMessage && (
+                                <div className="mt-2 text-red-600">
+                                    {customErrorMessage}
+                                </div>
+                        )} 
                     </div>
 
                     <div className="mt-6 flex justify-end">

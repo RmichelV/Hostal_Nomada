@@ -3,19 +3,32 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, useForm } from '@inertiajs/react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'; 
+import { useState } from 'react';  
 
 export default function ForgotPassword({ status }) {
     const { data, setData, post, processing, errors } = useForm({
         email: '',
     });
 
+    const [customErrorMessage, setCustomErrorMessage] = useState('');
+
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('password.email'));
+        post(route('password.email'),{
+            onError: (errors) => {
+                if (errors.email && errors.email.includes("We can't find a user with that email address.")) {
+                    setCustomErrorMessage('No podemos encontrar un usuario con ese email.');
+                }
+            },
+        });
     };
 
     return (
+        
+        <>
+        <AuthenticatedLayout/>
         <GuestLayout>
             <Head title="Forgot Password" />
 
@@ -41,7 +54,12 @@ export default function ForgotPassword({ status }) {
                     onChange={(e) => setData('email', e.target.value)}
                 />
 
-                <InputError message={errors.email} className="mt-2" />
+                {/* <InputError message={errors.email} className="mt-2" /> */}
+                {customErrorMessage && (
+                                <div className="mt-2 text-red-600">
+                                    {customErrorMessage}
+                                </div>
+                )} 
 
                 <div className="mt-4 flex items-center justify-end">
                     <PrimaryButton className="ms-4" disabled={processing}>
@@ -49,6 +67,8 @@ export default function ForgotPassword({ status }) {
                     </PrimaryButton>
                 </div>
             </form>
-        </GuestLayout>
+        </GuestLayout> 
+        
+        </>
     );
 }
