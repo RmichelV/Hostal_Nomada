@@ -13,12 +13,13 @@ class RolMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
-    {
-         // Verificar si el usuario está autenticado y su rol
-     
+    // public function handle(Request $request, Closure $next, $rol_Id)
+    // {
+    //     // Verifica si el usuario está autenticado y si su rol coincide con el rol requerido
+    //     if (!$request->user() || $request->user()->rol_id != $rol_Id) {
+    //         abort(403, 'Acceso no autorizado.');
+    //     }
 
-        // Redireccionar si no tiene el rol necesario
-        return redirect('/no-autorizado');
-    }
+    //     return $next($request);
+    // }
 }

@@ -14,7 +14,8 @@ export default function AuthenticatedLayout({ header, children, auth }) {
         useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <>
+        {/* // <div className={`min-h-screen bg-gray-100 ${Navbar.navi}`}> */}
             <nav className={`border-b border-gray-100 bg-white ${Navbar.navbarBackground}`}>
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
@@ -282,7 +283,7 @@ export default function AuthenticatedLayout({ header, children, auth }) {
 
 
              {/** banner */}
-            <main className={Navbar.mainTitle}>
+            {/* <main className={Navbar.mainTitle}>
                 <img src="img/LaPaz.png" alt="La Paz" className={Navbar.BannerLaPaz} id='bannerLaPaz' />
                 <div className={`${Navbar.title}`}>
                     <h1 className={Navbar.title_up}>
@@ -292,17 +293,18 @@ export default function AuthenticatedLayout({ header, children, auth }) {
                         El mejor hostal ubicado en la ciudad maravilla La Paz - Bolivia
                     </h2>
                 </div>
-            </main>
-            
+            </main> */}
+{/*             
             {header && (
                 <header className="bg-white shadow">
                     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                         {header}
                     </div>
                 </header>
-            )}
+            )} */}
             
-        </div>
+        {/* // </div> */}
+        </>
     );
 }
 

@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'; // Asegúrate d
 import welcome from '/resources/css/Welcome.module.css';
 //direcciones 
 import { useNavigate } from 'react-router-dom';
-
+import Navbar from '../../css/NavBar.module.css'
 
 export default function Home({ auth, laravelVersion, phpVersion, room_types }) {
     
@@ -23,14 +23,24 @@ export default function Home({ auth, laravelVersion, phpVersion, room_types }) {
         <>
             <Head title="Home"/>
             
-            <AuthenticatedLayout
-                header={
-                    <h2 className={`${welcome.title_h}`}>
-                        Nuestras habitaciones 
+            <AuthenticatedLayout/>
+            <main className={Navbar.mainTitle}>
+                <img src="img/LaPaz.png" alt="La Paz" className={Navbar.BannerLaPaz} id='bannerLaPaz' />
+                <div className={`${Navbar.title}`}>
+                    <h1 className={Navbar.title_up}>
+                        HOSTAL NOMADA SUITES
+                    </h1>
+                    <h2 className={`${Navbar.title_down}`}>
+                        El mejor hostal ubicado en la ciudad maravilla La Paz - Bolivia
                     </h2>
-            }
-            />
-        
+                </div>
+            </main>
+
+            <header className="bg-white shadow">
+                    <div className={`mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 ${welcome.title_h}`}>
+                        Nuestras habitaciones   
+                    </div>
+            </header>
             {room_types.map((room_type, index) => (
                 <div className={`${welcome.container}`} key={index}>
                     

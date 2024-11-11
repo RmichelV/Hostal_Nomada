@@ -152,14 +152,16 @@ export default function Reservation(props) {
         
         const precioT = pU * nP * diasDiferencia
         // setAddData('total_price',precioT);
-        setAddData((prevData) => ({ ...prevData, total_price: precioT }));
+        // setAddData((prevData) => ({ ...prevData, total_price: precioT }));
 
         
         if(precioT>0){
+            setAddData((prevData) => ({ ...prevData, total_price: precioT }));
             setShowDivs(!showDivs);
         }else if (precioT<= 0){
+            setAddData((prevData) => ({ ...prevData, total_price: 0 }));
             setShowDivs(false);
-            alert("Agregue datos correctos por favor")
+            alert("Por favor agregue datos correctos en: numero de habitaciones y fechas de ingreso y salida")
         }
     }
     useEffect(() => {
@@ -198,12 +200,18 @@ export default function Reservation(props) {
         <div>
             <Head title="Reservar"/>
             <AuthenticatedLayout
-                header={
-                    <h2 className={`${ReservationsCss.title_h}`}>
-                        Reserva aquí
-                    </h2>
-                }
+                // header={
+                //     <h2 className={`${ReservationsCss.title_h}`}>
+                //         Reserva aquí
+                //     </h2>
+                // }
             />
+
+            <header className="bg-white shadow">
+                    <div className={`mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 ${ReservationsCss.title_h}`}>
+                        Reserva Aquí
+                    </div>
+            </header>
 
                 <div className="py">
                     <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
