@@ -23,7 +23,7 @@ class ReservationController extends Controller
         $room_types = Room_type::all();
         $users = User::all();
 
-        return Inertia::render('Reservation',['reservations'=>$reservations, 'room_types'=>$room_types]);
+        return Inertia::render('Reservation',['reservations'=>$reservations, 'room_types'=>$room_types, 'users'=>$users]);
         // return view ('Reservation', compact('reservations','room_types','users'));
     }
 
@@ -160,8 +160,13 @@ class ReservationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Reservation $reservation)
+    public function destroy($id)
     {
-        //
+        $reservation = Reservation::find($id);
+        $reservation->delete();
+
+        return redirect()->back()->with('meesage','habitacion reservada con exito');
+
     }
+    
 }

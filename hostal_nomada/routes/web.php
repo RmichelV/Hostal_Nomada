@@ -3,6 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use App\Models\Room_type;
 use App\Models\Restaurant;
+use App\Models\Reservation;
+use App\Models\User;
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,6 +33,21 @@ Route::get('/', function () {
         'room_types' => $room_types
     ]);
 });
+
+Route::get('ReservationList', function () {
+    $reservations = Reservation::all();
+    $room_types = Room_type::all();
+    $users = User::all();
+
+    return Inertia::render('Administration/ReservationList',['reservations'=>$reservations, 'room_types'=>$room_types, 'users'=>$users]);
+
+});
+
+// $reservations = Reservation::all();
+// $room_types = Room_type::all();
+// $users = User::all();
+
+// return Inertia::render('Reservation',['reservations'=>$reservations, 'room_types'=>$room_types, 'users'=>$users]);
 
 Route::get('/home', function () {
     $room_types = Room_type::all();
