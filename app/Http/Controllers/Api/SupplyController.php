@@ -4,40 +4,35 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Supply;
-use App\Http\Requests\StoreSupplyRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class SupplyController extends Controller
 {
-    /**
-     * Mostrar todos los suministros.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function index()
     {
-        return Supply::all();
+        return Supply::get();
     }
 
-    /**
-     * Crear un nuevo suministro.
-     *
-     * @param  \App\Http\Requests\StoreSupplyRequest  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(StoreSupplyRequest $request)
+    public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:25|unique:supplies,name,',
+            'description' => 'nullable|string|max:55',
+            'price' => 'required|numeric|between:1,9999.99',
+            'supply_image' => 'nullable|max:2048',
+        ]);
+
         $supply = new Supply();
-        $supply->dishname = $request->input('dishname');
+        $supply->name = $request->input('name');
         $supply->description = $request->input('description');
         $supply->price = $request->input('price');
-        
-        // Si se sube una imagen para el suministro
+
         if ($request->hasFile('supply_image')) {
-            $supplyImage = $request->file('supply_image');
-            $imageName = $supply->dishname . '.' . $supplyImage->extension();
-            $path = $supplyImage->storeAs('supply_images', $imageName, 'public');
-            $supply->supply_image = Storage::url($path); // Guardar la URL de la imagen
+            $image = $request->file('supply_image');
+            $imageName = $supply->name . "." . $image->extension();
+            $path = $image->storeAs('supply_images', $imageName, 'public');
+            $supply->supply_image = Storage::url($path);
         }
 
         $supply->save();
@@ -45,39 +40,36 @@ class SupplyController extends Controller
         return response()->json($supply, 201);
     }
 
-    /**
-     * Mostrar los detalles de un suministro.
-     *
-     * @param  \App\Models\Supply  $supply
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function show(Supply $supply)
     {
-        return response()->json($supply);
+        return $supply;
     }
 
-    /**
-     * Actualizar un suministro existente.
-     *
-     * @param  \App\Http\Requests\StoreSupplyRequest  $request
-     * @param  \App\Models\Supply  $supply
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(StoreSupplyRequest $request, Supply $supply)
+    public function update(Request $request, Supply $supply)
     {
-        $supply->dishname = $request->input('dishname');
+
+        $request->validate([
+            // 'name' => 'required|string|max:25',
+            'name' => 'required|string|max:25|unique:supplies,name,' . $supply->id,
+
+            'description' => 'nullable|string|max:55',
+            'price' => 'required|numeric|between:1,9999.99',
+            'supply_image' => 'nullable|max:2048',
+        ]);
+
+        $supply->name = $request->input('name');
         $supply->description = $request->input('description');
         $supply->price = $request->input('price');
 
         if ($request->hasFile('supply_image')) {
             if ($supply->supply_image) {
-                Storage::disk('public')->delete($supply->supply_image); 
+                Storage::disk('public')->delete(str_replace('/storage/', '', $supply->supply_image));
             }
 
-            $supplyImage = $request->file('supply_image');
-            $imageName = $supply->dishname . '.' . $supplyImage->extension();
-            $path = $supplyImage->storeAs('supply_images', $imageName, 'public');
-            $supply->supply_image = Storage::url($path); 
+            $image = $request->file('supply_image');
+            $imageName = $supply->name . "." . $image->extension();
+            $path = $image->storeAs('supply_images', $imageName, 'public');
+            $supply->supply_image = Storage::url($path);
         }
 
         $supply->save();
@@ -85,20 +77,14 @@ class SupplyController extends Controller
         return response()->json($supply);
     }
 
-    /**
-     * Eliminar un suministro.
-     *
-     * @param  \App\Models\Supply  $supply
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function destroy(Supply $supply)
     {
         if ($supply->supply_image) {
-            Storage::disk('public')->delete($supply->supply_image); // Eliminar la imagen del suministro
+            Storage::disk('public')->delete(str_replace('/storage/', '', $supply->supply_image));
         }
 
         $supply->delete();
 
-        return response()->json(['message' => 'Suministro eliminado exitosamente'], 200);
+        return response()->json(['message' => 'Suministro eliminado exitosamente.'], 200);
     }
 }

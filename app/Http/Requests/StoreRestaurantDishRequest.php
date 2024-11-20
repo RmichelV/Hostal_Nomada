@@ -11,7 +11,7 @@ class StoreRestaurantDishRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class StoreRestaurantDishRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'dishname' => 'required|string|max:25',
+            'description' => 'required|string|max:55',
+            'price' => 'required|numeric|min:1|max:999999.99',
+            // 'dish_image' => 'nullable|string|max:300',
         ];
     }
 }

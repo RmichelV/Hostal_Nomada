@@ -11,7 +11,7 @@ class UpdateSupplyRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class UpdateSupplyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:25',
+            'description' => 'nullable|string|max:55',
+            'supply_image' => 'nullable|string|max:500',
+            'icon' => 'nullable|string|max:500',
+            'price' => 'required|numeric|min:1|max:9999999.99',
         ];
     }
 }

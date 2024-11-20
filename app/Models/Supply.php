@@ -7,6 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Supply extends Model
 {
-    /** @use HasFactory<\Database\Factories\SupplyFactory> */
     use HasFactory;
+
+    protected $fillable = ['name', 'description', 'supply_image', 'icon', 'price'];
+
+    public function roomTypes()
+    {
+        return $this->belongsToMany(RoomType::class, 'room_type_supplies')->withPivot('quantity');
+    }
+
+    public function inventory()
+    {
+        return $this->hasMany(InventoryList::class);
+    }
 }

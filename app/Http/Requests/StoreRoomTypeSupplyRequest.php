@@ -11,7 +11,7 @@ class StoreRoomTypeSupplyRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreRoomTypeSupplyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'room_type_id' => 'required|exists:room_types,id',
+            'supply_id' => 'required|exists:supplies,id',
+            'quantity' => 'required|integer|min:1|max:999',
         ];
     }
 }

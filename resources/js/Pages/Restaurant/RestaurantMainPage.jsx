@@ -33,7 +33,7 @@ export default function RestaurantMainPage({ dishes=[] }) {
             {dishes.map((dish) => (
               <Card key={dish.id}>
                 <CardHeader>
-                  <img src={dish?.room_dish ?dish.room_dish : "/img/noimage.jpeg"} alt={dish.dishname} className="w-full h-48 object-cover rounded-t-lg" />
+                  <img src={dish?.dish_image ?dish.dish_image : "/img/noimage.jpeg"} alt={dish.dishname} className="w-full h-48 object-cover rounded-t-lg" />
                 </CardHeader>
                 <CardContent>
                   <CardTitle>{dish.dishname}</CardTitle>

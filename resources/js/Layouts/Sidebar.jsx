@@ -14,8 +14,9 @@ const Sidebar = ({ head }) => {
     { icon: LayoutDashboard, text: 'Usuarios', route: 'user' },
     { icon: Users, text: 'Empleados', route: 'employee' },
     { icon: Users, text: 'Tipos de Habitaciones', route: 'room_type' },
-    { icon: LayoutDashboard, text: 'Empleados', route: 'room' },
-    { icon: LayoutDashboard, text: 'Empleados', route: 'dish' },
+    { icon: LayoutDashboard, text: 'Habitaciones', route: 'room' },
+    { icon: LayoutDashboard, text: 'Platos', route: 'dish' },
+    { icon: LayoutDashboard, text: 'Insumos', route: 'supply' },
     
   ];
 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { Label } from "@/Components/ui/label";
 import Swal from 'sweetalert2';
 
 const RoomTypeForm = ({ roomType = {}, onFormSubmit }) => {
@@ -61,16 +61,18 @@ const RoomTypeForm = ({ roomType = {}, onFormSubmit }) => {
 
         if (response.status === 200) {
           Swal.fire("¡Éxito!", "Tipo de habitación actualizado exitosamente", "success");
-          onFormSubmit();
+          onFormSubmit(formData); // Asegúrate de pasar el objeto completo
         } else {
           Swal.fire("Error", "No se pudo actualizar el tipo de habitación", "error");
         }
+        onFormSubmit(formData); // Asegúrate de pasar el objeto completo
+
       } else {
         response = await axios.post('/api/roomtypes', formDataToSend);
 
         if (response.status >= 200 && response.status <= 250) {
           Swal.fire("¡Éxito!", "Tipo de habitación agregado exitosamente", "success");
-          onFormSubmit();
+          onFormSubmit(formData); // Asegúrate de pasar el objeto completo
         } else {
           Swal.fire("Error", "No se pudo agregar el tipo de habitación", "error");
         }

@@ -7,6 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Room extends Model
 {
-    /** @use HasFactory<\Database\Factories\RoomFactory> */
     use HasFactory;
+
+    protected $fillable = ['room_type_id', 'name', 'status'];
+
+    public function roomType()
+    {
+        return $this->belongsTo(RoomType::class);
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(ReservationRoom::class);
+    }
+
+    public function inventory()
+    {
+        return $this->hasMany(InventoryList::class);
+    }
 }

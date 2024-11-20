@@ -9,8 +9,8 @@ const DishForm = ({ dish = {}, onFormSubmit }) => {
   const [formData, setFormData] = useState({
     dishname: '',
     description: '',
-    price: '',
-    room_dish: null,
+    price: 1,
+    dish_image: null,
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -20,47 +20,37 @@ const DishForm = ({ dish = {}, onFormSubmit }) => {
       setFormData({
         dishname: dish.dishname || '',
         description: dish.description || '',
-        price: dish.price || '',
-        room_dish: dish.room_dish || null,
+        price: dish.price || 1,
+        dish_image: dish.dish_image || null,
       });
     }
   }, [dish]);
 
   const handleChange = (name, value) => {
     setFormData(prevData => ({ ...prevData, [name]: value }));
-    setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));  // Reset error when field changes
+    setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
   };
 
   const handleFileChange = (e) => {
-    setFormData(prevData => ({ ...prevData, room_dish: e.target.files[0] }));
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.dishname) newErrors.dishname = 'El nombre del plato es obligatorio';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;  // Returns true if no errors
+    setFormData(prevData => ({ ...prevData, dish_image: e.target.files[0] }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate the form before submitting
-    if (!validateForm()) return; // If validation fails, do not proceed
-
     setLoading(true);
+    setErrors({});
+
     const formDataToSend = new FormData();
     Object.keys(formData).forEach((key) => {
-      if (key === 'room_dish' && formData[key] !== null) {
+      if (key === 'dish_image' && formData[key] !== null) {
         formDataToSend.append(key, formData[key]);
-      } else if (key !== 'room_dish') {
+      } else {
         formDataToSend.append(key, formData[key]);
       }
     });
 
-    let response = null;
-
     try {
+      let response;
       if (dish?.id) {
         response = await axios.post(`/api/restaurant_dishes/${dish.id}`, formDataToSend, {
           headers: { 'X-HTTP-Method-Override': 'PUT' },
@@ -68,23 +58,25 @@ const DishForm = ({ dish = {}, onFormSubmit }) => {
 
         if (response.status === 200) {
           Swal.fire("¡Éxito!", "Plato actualizado exitosamente", "success");
-          onFormSubmit();
-        } else {
-          Swal.fire("Error", "No se pudo actualizar el plato", "error");
+          onFormSubmit(formData);
         }
+        else {
+          Swal.fire("Error", "No se pudo actualizar el tipo de habitación", "error");
+        }
+        onFormSubmit(formData);
       } else {
         response = await axios.post('/api/restaurant_dishes', formDataToSend);
 
         if (response.status >= 200 && response.status <= 250) {
           Swal.fire("¡Éxito!", "Plato agregado exitosamente", "success");
-          onFormSubmit();
-        } else {
-          Swal.fire("Error", "No se pudo agregar el plato", "error");
+          onFormSubmit(formData);
+        }
+        else {
+          Swal.fire("Error", "No se pudo agregar el tipo de habitación", "error");
         }
       }
 
       if (response && response.status === 422) {
-        // Handle validation errors
         setErrors(response.data.errors || {});
       }
     } catch (error) {
@@ -95,46 +87,60 @@ const DishForm = ({ dish = {}, onFormSubmit }) => {
     setLoading(false);
   };
 
-  const renderInputField = (label, id, type = 'text', required = true, placeholder = '') => (
-    <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 items-center">
-      <Label htmlFor={id} className="text-right">{label}</Label>
-      <Input
-        id={id}
-        type={type}
-        name={id}
-        value={formData[id]}
-        onChange={(e) => handleChange(id, e.target.value)}
-        placeholder={placeholder}
-        className="w-full"
-      />
-      {errors[id] && <p className="text-red-500 text-sm">{errors[id]}</p>}
-    </div>
-  );
-
-  const renderFileInput = () => (
-    <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 items-center">
-      <Label htmlFor="room_dish" className="text-right">Imagen del Plato</Label>
-      <Input
-        id="room_dish"
-        type="file"
-        name="room_dish"
-        onChange={handleFileChange}
-        className="w-full"
-      />
-    </div>
-  );
-
   return (
     <div className="p-6 flex flex-col max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-6 text-center">
         {dish && dish.id ? 'Editar Plato' : 'Agregar Nuevo Plato'}
       </h1>
       <form onSubmit={handleSubmit} className="space-y-2">
-        {renderInputField('Nombre del Plato', 'dishname')}
-        {renderInputField('Descripción', 'description', 'text', true, 'Añade una breve descripción del plato')}
-        {renderInputField('Precio', 'price', 'decimal', true, 'Ej:10.50')}
-        
-        {renderFileInput()}
+        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 items-center">
+          <Label htmlFor="dishname" className="text-right">Nombre del Plato</Label>
+          <Input
+            id="dishname"
+            name="dishname"
+            value={formData.dishname}
+            onChange={(e) => handleChange('dishname', e.target.value)}
+            required
+          />
+          {errors.dishname && <p className="text-red-500 text-sm">{errors.dishname}</p>}
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 items-center">
+          <Label htmlFor="description" className="text-right">Descripción</Label>
+          <Input
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={(e) => handleChange('description', e.target.value)}
+            required
+          />
+          {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 items-center">
+          <Label htmlFor="price" className="text-right">Precio</Label>
+          <Input
+            id="price"
+            name="price"
+            type="number"
+            step="0.01"
+            value={formData.price}
+            onChange={(e) => handleChange('price', e.target.value)}
+            required
+          />
+          {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 items-center">
+          <Label htmlFor="dish_image" className="text-right">Imagen del Plato</Label>
+          <Input
+            id="dish_image"
+            name="dish_image"
+            type="file"
+            onChange={handleFileChange}
+          />
+          {errors.dish_image && <p className="text-red-500 text-sm">{errors.dish_image}</p>}
+        </div>
 
         <Button type="submit" className="mt-6 w-full sm:w-auto" disabled={loading}>
           {loading ? 'Enviando...' : dish && dish.id ? 'Actualizar' : 'Agregar'}

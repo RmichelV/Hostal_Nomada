@@ -12,7 +12,7 @@ class RoomTypeController extends Controller
 {
     public function index()
     {
-        return RoomType::all();
+        return RoomType::get();
     }
 
     public function store(StoreRoomTypeRequest $request)

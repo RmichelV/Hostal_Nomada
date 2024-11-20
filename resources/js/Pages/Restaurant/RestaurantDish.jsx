@@ -1,48 +1,54 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import { Button } from "@/Components/ui/button"
-import { PlusIcon, Pencil, Trash2 } from 'lucide-react'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "@/Components/ui/table"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from "@/Components/ui/card"
-import Modal from '@/Components/Modal'
-import Swal from 'sweetalert2'
-import DishForm from './DishForm'
-import AppLayout from '@/Layouts/AppLayout'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Button } from '@/Components/ui/button';
+import { PlusIcon, Pencil, Trash2 } from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/Components/ui/card';
+import Modal from '@/Components/Modal';
+import Swal from 'sweetalert2';
+import DishForm from './DishForm'; // Formulario para agregar/editar platos
+import AppLayout from '@/Layouts/AppLayout';
 
 const RestaurantDishes = ({ dishes = [] }) => {
-  const [isFormOpen, setIsFormOpen] = useState(false)
-  const [dishesData, setDishesData] = useState(dishes)
-  const [selectedDish, setSelectedDish] = useState(null)
-
-  const fetchDishes = async () => {
-    try {
-      const response = await axios.get('/api/restaurant_dishes')
-      setDishesData(response.data)
-    } catch (error) {
-      console.error("Error recibiendo platos:", error)
-    }
-  }
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [dishesData, setDishesData] = useState(dishes);
+  const [selectedDish, setSelectedDish] = useState(null);
 
   useEffect(() => {
-    fetchDishes()
-  }, [])
+    fetchDishes();
+  }, []);
+
+
 
   const handleEdit = (dish) => {
-    setSelectedDish(dish)
-    setIsFormOpen(true)
-  }
+    setSelectedDish(dish);
+    setIsFormOpen(true);
+  };
 
   const handleDeleteDish = async (id) => {
     try {
-      await axios.delete(`/api/restaurant_dishes/${id}`)
-      Swal.fire("¡Éxito!", "Plato eliminado exitosamente", "success")
-      setDishesData(dishesData.filter(dish => dish.id !== id))
+      await axios.delete(`/api/restaurant_dishes/${id}`);
+      Swal.fire('¡Éxito!', 'Plato eliminado exitosamente', 'success');
+      setDishesData(dishesData.filter((dish) => dish.id !== id));
     } catch (error) {
-      Swal.fire("Error", "No se pudo eliminar el plato", "error")
+      Swal.fire('Error', 'No se pudo eliminar el plato', 'error');
     }
-  }
+  };
 
   const handleDeleteConfirmation = (dish) => {
     Swal.fire({
@@ -54,19 +60,35 @@ const RestaurantDishes = ({ dishes = [] }) => {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        handleDeleteDish(dish.id)
+        handleDeleteDish(dish.id);
       }
-    })
-  }
+    });
+  };
 
-  const handleAddOrUpdate = (dish=[]) => {
+  const handleAddOrUpdate = (dish) => {
+    if (!dish) {
+      console.error("El objeto está vacío o es undefined.");
+      return;
+    }
     if (selectedDish) {
-      setDishesData(dishesData.map(d => d.id === dish.id ? dish : d));
+      setDishesData((prevData) =>
+        prevData.map((d) => (d.id === dish.id ? dish : d))
+      );
     } else {
-      setDishesData([...dishesData, dish]);
+      setDishesData((prevData) => [dish, ...prevData]);
     }
     setIsFormOpen(false);
-  }
+  };
+  const fetchDishes = async () => {
+    try {
+      const response = await axios.get('/api/restaurant_dishes');
+      if (response.status === 200) {
+        setDishesData(response.data);
+      }
+    } catch (error) {
+      console.error('Error obteniendo los platos:', error);
+    }
+  };
 
   return (
     <AppLayout>
@@ -74,38 +96,41 @@ const RestaurantDishes = ({ dishes = [] }) => {
         <Card className="w-full">
           <CardHeader>
             <CardTitle className="text-2xl md:text-3xl">Platos del Restaurante</CardTitle>
-            <CardDescription>Gestiona los platos del restaurante</CardDescription>
+            <CardDescription>Gestiona los platos de tu restaurante</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => {
-              setSelectedDish(null)
-              setIsFormOpen(true)
-            }} className="mb-4 w-full sm:w-auto">
+            <Button
+              onClick={() => {
+                setSelectedDish(null);
+                setIsFormOpen(true);
+              }}
+              className="mb-4 w-full sm:w-auto"
+            >
               <PlusIcon className="mr-2 h-4 w-4" /> Agregar Nuevo Plato
             </Button>
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[50px]">Id</TableHead>
+                    <TableHead>Id</TableHead>
                     <TableHead>Nombre</TableHead>
                     <TableHead>Descripción</TableHead>
                     <TableHead>Precio</TableHead>
                     <TableHead>Imagen</TableHead>
-                    <TableHead className="text-center">Acciones</TableHead>
+                    <TableHead>Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {dishesData.map((dish, index) => (
-                    <TableRow key={dish?.id}>
+                    <TableRow key={dish.id}>
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell>{dish?.dishname}</TableCell>
-                      <TableCell>{dish?.description}</TableCell>
-                      <TableCell>{dish?.price}</TableCell>
+                      <TableCell>{dish.dishname}</TableCell>
+                      <TableCell>{dish.description}</TableCell>
+                      <TableCell>{dish.price}</TableCell>
                       <TableCell>
                         <img
-                          src={dish?.room_dish ? `${dish?.room_dish}` : "/img/noimage.jpeg"}
-                          alt={dish?.dishname}
+                          src={dish.dish_image ? `${dish.dish_image}` : '/img/noimage.jpeg'}
+                          alt={dish.dishname}
                           className="w-16 h-16 object-cover"
                         />
                       </TableCell>
@@ -114,7 +139,11 @@ const RestaurantDishes = ({ dishes = [] }) => {
                           <Button onClick={() => handleEdit(dish)} size="sm">
                             <Pencil className="h-4 w-4" />
                           </Button>
-                          <Button onClick={() => handleDeleteConfirmation(dish)} size="sm" variant="destructive">
+                          <Button
+                            onClick={() => handleDeleteConfirmation(dish)}
+                            size="sm"
+                            variant="destructive"
+                          >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
@@ -137,7 +166,7 @@ const RestaurantDishes = ({ dishes = [] }) => {
         )}
       </div>
     </AppLayout>
-  )
-}
+  );
+};
 
-export default RestaurantDishes
+export default RestaurantDishes;

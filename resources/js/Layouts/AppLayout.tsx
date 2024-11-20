@@ -1,7 +1,7 @@
 import { router } from '@inertiajs/core';
 import { Link, Head, usePage } from '@inertiajs/react';
 import classNames from 'classnames';
-import React, { PropsWithChildren, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import useRoute from '@/Hooks/useRoute';
 import useTypedPage from '@/Hooks/useTypedPage';
 import ApplicationMark from '@/Components/ApplicationMark';
@@ -12,6 +12,7 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import Sidebar from './Sidebar';
 import { Inertia } from '@inertiajs/inertia';
+import axios from 'axios';
 
 interface Props {
   title: string;
@@ -29,15 +30,39 @@ export default function AppLayout({
   const route = useRoute();
   const [showingNavigationDropdown, setShowingNavigationDropdown] =
     useState(false);
-
-  function switchToTeam(e: React.FormEvent, team: any) {
-    e.preventDefault();
-    router.put(
-      route('current-team.update'),
-      { team_id: team.id },
-      { preserveState: false },
-    );
-  }
+    const [notifications, setNotifications] = useState([]);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  
+  
+    useEffect(() => {
+      fetchNotifications();
+    }, []);
+  
+    const fetchNotifications = async () => {
+      try {
+        const { data } = await axios.get('/notifications');
+        setNotifications(data);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
+  
+    const markNotificationsAsRead = async () => {
+      try {
+        await axios.post('/notifications/read');
+        fetchNotifications(); // Refrescar lista después de marcar como leídas
+      } catch (error) {
+        console.error('Error marking notifications as read:', error);
+      }
+    };
+  // function switchToTeam(e: React.FormEvent, team: any) {
+  //   e.preventDefault();
+  //   router.put(
+  //     route('current-team.update'),
+  //     { team_id: team.id },
+  //     { preserveState: false },
+  //   );
+  // }
 
   function logout(e: React.FormEvent) {
     e.preventDefault();
@@ -56,16 +81,14 @@ if (!auth.user) {
     Inertia.visit("/login");
     return null;
 }
-
+console.info(page.props.auth.user?.profile_photo_path? 'hay '+page.props.auth.user?.profile_photo_path:'n hay')
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
       <Head title={title} />
       <Banner />
 
       {/* Sidebar */}
-      {/* <div className="fixed top-0 left-0 bottom-0 w-64 bg-gray-800 text-white pt-16 z-30"> */}
-
-      <div className="top-0 left-0  bottom-0 pt-16">
+      <div className="top-0 left-0 bottom-0 pt-16">
       {auth.user.rol_id === 1 && <Sidebar head={renderHeader?.()} />}
       </div>
 
@@ -85,11 +108,11 @@ if (!auth.user) {
                     href={route('dashboard')}
                     active={route().current('dashboard')}
                   >
-                    Dashboard
+                    Panel de Control
                   </NavLink>
                 </div>
                 <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex items">
-                            <NavLink href={route("reservation")} active={route().current("reservation")}>
+                <NavLink href={route("reservation")} active={route().current("reservation")}>
                                 Reservaciones
                             </NavLink>
                         </div>
@@ -97,26 +120,92 @@ if (!auth.user) {
                             <NavLink href={route("restaurant")} active={route().current("restaurant")}>
                                 Restaurante
                             </NavLink>
-                        </div>
+                        </div>           
               </div>
 
+
               <div className="hidden sm:flex sm:items-center sm:ml-6">
+              <div className="relative mr-5">
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="relative p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 17h5l-1.405-1.405M15 17a3.001 3.001 0 00-6 0m6 0a3.001 3.001 0 01-6 0M9 3v1m0 0A5 5 0 1119 9a5 5 0 00-5-5m0 0V3"
+                  />
+                </svg>
+                {notifications.length > 0 && (
+                  <span className="absolute top-0 right-0 inline-block w-4 h-4 text-xs font-medium text-center text-white bg-red-600 rounded-full">
+                    {notifications.length}
+                  </span>
+                )}
+              </button>
+
+              {/* Dropdown */}
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden z-20">
+                  <div className="py-2">
+                    {notifications.length > 0 ? (
+                      notifications.map((notification: any) => (
+                        <div
+                          key={notification.id}
+                          className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
+                        >
+                          Mensaje: {notification.data.cliente} ha realizado una nueva reserva.
+                          <a href={`/reservas/${notification.data.reserva_id}`} className="text-blue-500 hover:underline">
+                            Ver detalles
+                          </a>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200">
+                        Sin notificaciones
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    onClick={markNotificationsAsRead}
+                    className="w-full text-center py-2 text-sm text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-900"
+                  >
+                    Marcar todas como leídas
+                  </button>
+                </div>
+              )}
+            </div>
                 <Dropdown
                   align="right"
                   width="48"
                   renderTrigger={() => (
                     <button className="flex text-sm border-2 border-transparent rounded-full focus:outline-none">
+                      {
+                      page.props.auth.user?.profile_photo_path?
+                      (<img
+                      className="h-8 w-8 rounded-full object-cover"
+                      src={`/storage/`+page.props.auth.user?.profile_photo_path}
+                      alt={page.props.auth.user?.name}
+                    />):
+                      (
                       <img
                         className="h-8 w-8 rounded-full object-cover"
                         src={page.props.auth.user?.profile_photo_url}
                         alt={page.props.auth.user?.name}
-                      />
+                      />)}
                     </button>
                   )}
                 >
-                  <DropdownLink href={route('profile.show')}>Profile</DropdownLink>
+                  <DropdownLink href={route('profile.show')}>Perfil</DropdownLink>
                   <form onSubmit={logout}>
-                    <DropdownLink as="button">Log Out</DropdownLink>
+                    <DropdownLink as="button">Cerrar sesión</DropdownLink>
                   </form>
                 </Dropdown>
               </div>
@@ -160,7 +249,7 @@ if (!auth.user) {
               </div>
             </div>
           </div>
-           {/* <!-- Responsive Navigation Menu --> */}
+           {/* <!-- Menú de navegación responsive --> */}
           <div
             className={classNames('sm:hidden', {
               block: showingNavigationDropdown,
@@ -172,20 +261,40 @@ if (!auth.user) {
                 href={route('dashboard')}
                 active={route().current('dashboard')}
               >
-                Dashboard
+                Panel de Control
+              </ResponsiveNavLink>
+            </div>
+            <div className="pt-2 pb-3 space-y-1">
+              <ResponsiveNavLink
+                href={route("reservation")} 
+                active={route().current("reservation")}>
+                  Reservaciones
+              </ResponsiveNavLink>
+              <ResponsiveNavLink
+                href={route("restaurant")} 
+                active={route().current("restaurant")}>
+                  Restaurante
               </ResponsiveNavLink>
             </div>
 
-            {/* <!-- Responsive Settings Options --> */}
+            {/* <!-- Opciones de configuración responsive --> */}
             <div className="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
               <div className="flex items-center px-4">
                 {page.props.jetstream.managesProfilePhotos ? (
                   <div className="flex-shrink-0 mr-3">
-                    <img
-                      className="h-10 w-10 rounded-full object-cover"
-                      src={page.props.auth.user?.profile_photo_url}
+                    {
+                      page.props.auth.user?.profile_photo_path?
+                      (<img
+                      className="h-8 w-8 rounded-full object-cover"
+                      src={`/storage/`+page.props.auth.user?.profile_photo_path}
                       alt={page.props.auth.user?.name}
-                    />
+                    />):
+                      (
+                      <img
+                        className="h-8 w-8 rounded-full object-cover"
+                        src={page.props.auth.user?.profile_photo_url}
+                        alt={page.props.auth.user?.name}
+                      />)}
                   </div>
                 ) : null}
 
@@ -204,7 +313,7 @@ if (!auth.user) {
                   href={route('profile.show')}
                   active={route().current('profile.show')}
                 >
-                  Profile
+                  Perfil
                 </ResponsiveNavLink>
 
                 {page.props.jetstream.hasApiFeatures ? (
@@ -212,13 +321,13 @@ if (!auth.user) {
                     href={route('api-tokens.index')}
                     active={route().current('api-tokens.index')}
                   >
-                    API Tokens
+                    Tokens API
                   </ResponsiveNavLink>
                 ) : null}
 
-                {/* <!-- Authentication --> */}
+                {/* <!-- Autenticación --> */}
                 <form method="POST" onSubmit={logout}>
-                  <ResponsiveNavLink as="button">Log Out</ResponsiveNavLink>
+                  <ResponsiveNavLink as="button">Cerrar sesión</ResponsiveNavLink>
                 </form>
 
               </div>

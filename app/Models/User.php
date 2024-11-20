@@ -79,4 +79,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Rol::class, 'rol_id');
     }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class);
+    }
 }

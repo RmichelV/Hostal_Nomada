@@ -4,38 +4,35 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\RestaurantDish;
-use App\Http\Requests\StoreRestaurantDishRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class RestaurantDishController extends Controller
 {
-    /**
-
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function index()
     {
-        return RestaurantDish::all();
+        return RestaurantDish::get();
     }
 
-    /**
-
-     * @param  \App\Http\Requests\StoreRestaurantDishRequest  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(StoreRestaurantDishRequest $request)
+    public function store(Request $request)
     {
+        $request->validate([
+            'dishname' => 'required|string|max:25',
+            'description' => 'required|string|max:55',
+            'price' => 'required|numeric|between:1,9999.99',
+            'dish_image' => 'nullable|max:2048',
+        ]);
+
         $dish = new RestaurantDish();
         $dish->dishname = $request->input('dishname');
         $dish->description = $request->input('description');
-        $dish->room_dish = $request->input('room_dish');
-        
-        // Si se sube una imagen para el plato
-        if ($request->hasFile('room_dish')) {
-            $roomDishImage = $request->file('room_dish');
-            $imageName = $dish->dishname . '.' . $roomDishImage->extension();
-            $path = $roomDishImage->storeAs('dish_images', $imageName, 'public');
-            $dish->room_dish = Storage::url($path); // Guardar la URL de la imagen
+        $dish->price = $request->input('price');
+
+        if ($request->hasFile('dish_image')) {
+            $image = $request->file('dish_image');
+            $imageName = $dish->dishname . "." . $image->extension();
+            $path = $image->storeAs('dish_images', $imageName, 'public');
+            $dish->dish_image = Storage::url($path);
         }
 
         $dish->save();
@@ -43,39 +40,33 @@ class RestaurantDishController extends Controller
         return response()->json($dish, 201);
     }
 
-    /**
-     * Mostrar los detalles de un plato.
-     *
-     * @param  \App\Models\RestaurantDish  $dish
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function show(RestaurantDish $dish)
     {
-        return response()->json($dish);
+        return $dish;
     }
 
-    /**
-     * Actualizar un plato existente.
-     *
-     * @param  \App\Http\Requests\StoreRestaurantDishRequest  $request
-     * @param  \App\Models\RestaurantDish  $dish
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(StoreRestaurantDishRequest $request, RestaurantDish $dish)
+    public function update(Request $request, RestaurantDish $dish)
     {
+        $request->validate([
+            'dishname' => 'required|string|max:25',
+            'description' => 'required|string|max:55',
+            'price' => 'required|numeric|between:1,9999.99',
+            'dish_image' => 'nullable|max:2048',
+        ]);
+
         $dish->dishname = $request->input('dishname');
         $dish->description = $request->input('description');
-        $dish->room_dish = $request->input('room_dish');
+        $dish->price = $request->input('price');
 
-        if ($request->hasFile('room_dish')) {
-            if ($dish->room_dish) {
-                Storage::disk('public')->delete($dish->room_dish); 
+        if ($request->hasFile('dish_image')) {
+            if ($dish->dish_image) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $dish->dish_image));
             }
 
-            $roomDishImage = $request->file('room_dish');
-            $imageName = $dish->dishname . '.' . $roomDishImage->extension();
-            $path = $roomDishImage->storeAs('dish_images', $imageName, 'public');
-            $dish->room_dish = Storage::url($path); 
+            $image = $request->file('dish_image');
+            $imageName = $dish->dishname . "." . $image->extension();
+            $path = $image->storeAs('dish_images', $imageName, 'public');
+            $dish->dish_image = Storage::url($path);
         }
 
         $dish->save();
@@ -85,12 +76,12 @@ class RestaurantDishController extends Controller
 
     public function destroy(RestaurantDish $dish)
     {
-        if ($dish->room_dish) {
-            Storage::disk('public')->delete($dish->room_dish); // Eliminar la imagen del plato
+        if ($dish->dish_image) {
+            Storage::disk('public')->delete(str_replace('/storage/', '', $dish->dish_image));
         }
 
         $dish->delete();
 
-        return response()->json(['message' => 'Plato eliminado exitosamente'], 200);
+        return response()->json(['message' => 'Plato eliminado exitosamente.'], 200);
     }
 }

@@ -12,20 +12,23 @@ import { Link } from '@inertiajs/react'
 import ReservationForm from './ReservationForm'
 import AppLayout from '@/Layouts/AppLayout'
 
-const ReservationList = ({ reservationList = [], users = [], room_types = [] }) => {
-  const [reservationListData, setReservationListData] = useState(reservationList)
+const ReservationList = ({ reservations = [], users = [], room_types = [], notificaciones=[] }) => {
+  const [reservationListData, setReservationListData] = useState([]);
   const [selectedReservation, setSelectedReservation] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [isFormOpen, setIsFormOpen] = useState(false)
 
   const fetchReservationList = async () => {
     try {
-      const response = await axios.get('/api/reservations')
-      setReservationListData(response.data)
+      const response = await axios.get('/api/reservations');
+      console.log(response.data); // Verifica la estructura de los datos aquí
+      setReservationListData(response.data);
     } catch (error) {
-      console.error("Error recibiendo reservas:", error)
+      console.error("Error recibiendo reservas:", error);
     }
-  }
+  };
+  
+  console.log("NOTIFICACIONES: ",notificaciones)
 
   useEffect(() => {
     fetchReservationList()
@@ -86,6 +89,7 @@ const ReservationList = ({ reservationList = [], users = [], room_types = [] }) 
               </Button>
             </Link>
             <div className="overflow-x-auto">
+              
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -97,17 +101,19 @@ const ReservationList = ({ reservationList = [], users = [], room_types = [] }) 
                     <TableHead>Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
+                {Array.isArray(reservationListData) && reservationListData.map((reservation, index) => (
+
                 <TableBody>
                   {reservationListData.map((reservation, index) => (
-                    <TableRow key={reservation.id}>
+                    <TableRow key={reservation?.id}>
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell>{reservation.user.name}</TableCell>
-                      <TableCell>{reservation.room_types.name}</TableCell>
-                      <TableCell>{reservation.check_in}</TableCell>
-                      <TableCell>{reservation.check_out}</TableCell>
+                      <TableCell>{reservation?.user.name}</TableCell>
+                      <TableCell>{reservation?.room_types.name}</TableCell>
+                      <TableCell>{reservation?.check_in}</TableCell>
+                      <TableCell>{reservation?.check_out}</TableCell>
                       <TableCell>
                         <div className="flex flex-wrap justify-center gap-2">
-                          {reservation.status === 1 && (
+                          {reservation?.status === 1 && (
                             <>
                               <Button onClick={() => handleEdit(reservation)} size="sm">
                                 <Pencil className="h-4 w-4" />
@@ -122,6 +128,7 @@ const ReservationList = ({ reservationList = [], users = [], room_types = [] }) 
                     </TableRow>
                   ))}
                 </TableBody>
+              ))}
               </Table>
             </div>
           </CardContent>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { LineChart, BarChart, PieChart, Line, Bar, Pie, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter,Cell } from 'recharts'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/Components/ui/select"
@@ -32,15 +32,15 @@ export default function DashContent() {
     { day: 'D', rooms: 16 },
   ]
 
-  const regressionData = [
-    { x: 1, y: 3 },
-    { x: 2, y: 5 },
-    { x: 3, y: 4 },
-    { x: 4, y: 7 },
-    { x: 5, y: 6 },
-    { x: 6, y: 8 },
-    { x: 7, y: 9 },
-  ]
+  // const regressionData = [
+  //   { x: 1, y: 3 },
+  //   { x: 2, y: 5 },
+  //   { x: 3, y: 4 },
+  //   { x: 4, y: 7 },
+  //   { x: 5, y: 6 },
+  //   { x: 6, y: 8 },
+  //   { x: 7, y: 9 },
+  // ]
 
   const calculateRegression = (data) => {
     const n = data.length;
@@ -62,7 +62,44 @@ export default function DashContent() {
       yRegression: slope * point.x + intercept
     }));
   }
+  // const regressionDataWithLine = calculateRegression(regressionData);
+  const [dashboardData, setDashboardData] = useState({
+    userCount: 0,
+    totalReservations: 0,
+    cancelledReservations: 0,
+    availableRooms: 0,
+    totalEarnings: 0,
+  });
+
+  useEffect(() => {
+    // Llamada a la API para obtener los datos
+    axios.get('/dashboard-data')
+      .then(response => {
+        setDashboardData(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching dashboard data:', error);
+      });
+  }, []);
+  const [regressionData, setRegressionData] = useState([]);
   const regressionDataWithLine = calculateRegression(regressionData);
+
+useEffect(() => {
+  axios.get('/forecast') // Ajusta la URL a la ruta de tu API de Laravel
+    .then((response) => {
+      if (response.data.forecast) {
+        // Aquí manejas la estructura de los datos recibidos
+        const forecastData = Object.entries(response.data.forecast).map(([date, value]) => ({
+          x: new Date(date).getTime(),  // Convertimos la fecha a un timestamp para usarla en el gráfico
+          y: value,
+        }));
+        setRegressionData(forecastData);
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching regression data:", error);
+    });
+}, []); // Solo se ejecuta una vez cuando el componente se monta
 
     return (
         // <div className="relative h-[300px] w-full">
@@ -71,73 +108,47 @@ export default function DashContent() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-6 gap-4 mb-8">
-          <Card className="p-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <div className="text-sm text-gray-500">Total de Huespedes</div>
-                <div className="text-2xl font-bold">15</div>
-              </div>
-              <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
-                <LineChartIcon className="w-6 h-6 text-teal-600" />
-              </div>
+        <Card className="p-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <div className="text-sm text-gray-500">Total de Huespedes</div>
+              <div className="text-2xl font-bold">{dashboardData.userCount}</div>
             </div>
-          </Card>
-          <Card className="p-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <div className="text-sm text-gray-500">Total de Reservas</div>
-                <div className="text-2xl font-bold">25</div>
-              </div>
-              <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
-                <BarChartIcon className="w-6 h-6 text-teal-600" />
-              </div>
+          </div>
+        </Card>
+        <Card className="p-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <div className="text-sm text-gray-500">Total de Reservas</div>
+              <div className="text-2xl font-bold">{dashboardData.totalReservations}</div>
             </div>
-          </Card>
-          <Card className="p-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <div className="text-sm text-gray-500">Reservas Canceladas</div>
-                <div className="text-2xl font-bold">15</div>
-              </div>
-              <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
-                <PieChartIcon className="w-6 h-6 text-teal-600" />
-              </div>
+          </div>
+        </Card>
+        <Card className="p-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <div className="text-sm text-gray-500">Reservas Canceladas</div>
+              <div className="text-2xl font-bold">{dashboardData.cancelledReservations}</div>
             </div>
-          </Card>
-          <Card className="p-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <div className="text-sm text-gray-500">Habitaciones Disponibles</div>
-                <div className="text-2xl font-bold">3</div>
-              </div>
-              <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
-                <LineChartIcon className="w-6 h-6 text-teal-600" />
-              </div>
+          </div>
+        </Card>
+        <Card className="p-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <div className="text-sm text-gray-500">Habitaciones Disponibles</div>
+              <div className="text-2xl font-bold">{dashboardData.availableRooms}</div>
             </div>
-          </Card>
-          <Card className="p-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <div className="text-sm text-gray-500">Ingreso</div>
-                <div className="text-2xl font-bold">Bs.150k</div>
-              </div>
-              <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
-                <LineChartIcon className="w-6 h-6 text-teal-600" />
-              </div>
+          </div>
+        </Card>
+        <Card className="p-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <div className="text-sm text-gray-500">Ingreso Total</div>
+              <div className="text-2xl font-bold">Bs. {dashboardData.totalEarnings}</div>
             </div>
-          </Card>
-          <Card className="p-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <div className="text-sm text-gray-500">Ganancias Hoy</div>
-                <div className="text-2xl font-bold">Bs. 4600</div>
-              </div>
-              <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
-                <LineChartIcon className="w-6 h-6 text-teal-600" />
-              </div>
-            </div>
-          </Card>
-        </div>
+          </div>
+        </Card>
+      </div>
 
         {/* Charts Section */}
         <div className="grid grid-cols-2 gap-8">
@@ -239,7 +250,7 @@ export default function DashContent() {
           <Card className="p-6">
             <div className="flex justify-between items-center mb-4">
               <div className="text-lg font-bold">Análisis de Regresión</div>
-              <Select defaultValue="this-week">
+              {/* <Select defaultValue="this-week">
                 <SelectTrigger className="w-32">
                   <SelectValue placeholder="Select period" />
                 </SelectTrigger>
@@ -248,36 +259,46 @@ export default function DashContent() {
                   <SelectItem value="last-week">Last Week</SelectItem>
                   <SelectItem value="this-month">This Month</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select> */}
             </div>
             <ResponsiveContainer width="100%" height={300}>
-            <ScatterChart>
-                <CartesianGrid />
-                <XAxis
-                type="number"
-                dataKey="x"
-                name="Fecha"
-                domain={['dataMin', 'dataMax']}
-                tickFormatter={(timestamp) => new Date(timestamp).toLocaleDateString()}
-                />
-                <YAxis
-                type="number"
-                dataKey="y"
-                name="Valor"
-                domain={['auto', 'auto']}
-                />
-                <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-                <Scatter name="Data" data={regressionDataWithLine} fill="#8884d8" />
-                <Line
-                type="monotone"
-                dataKey="yRegression"
-                stroke="#ff7300"
-                dot={false}
-                activeDot={false}
-                legendType="none"
-                />
-            </ScatterChart>
-            </ResponsiveContainer>
+    <ScatterChart>
+      <CartesianGrid />
+      <XAxis
+        type="number"
+        dataKey="x"
+        name="Fecha"
+        domain={['dataMin', 'dataMax']}
+        tickFormatter={(timestamp) => new Date(timestamp).toLocaleDateString()}
+      />
+      <YAxis
+        type="number"
+        dataKey="y"
+        name="Valor"
+        domain={['auto', 'auto']}
+      />
+      <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+      
+      {/* Puntos de dispersión */}
+      <Scatter
+        name="Datos"
+        data={regressionDataWithLine}
+        fill="#8884d8"
+        shape="circle"
+        size={8} // Tamaño de los puntos
+      />
+      
+      {/* Línea de regresión */}
+      <Line
+        type="monotone"
+        dataKey="yRegression"
+        stroke="#ff7300"
+        dot={false}
+        activeDot={false}
+        legendType="none"
+      />
+    </ScatterChart>
+  </ResponsiveContainer>
           </Card>
         </div>
       </div>

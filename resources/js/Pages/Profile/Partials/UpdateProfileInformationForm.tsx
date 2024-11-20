@@ -126,11 +126,19 @@ export default function FormularioActualizarInformacionPerfil({ user }: Props) {
           ) : (
             // <!-- Foto de perfil actual -->
             <div className="mt-2">
-              <img
-                src={user.profile_photo_url}
-                alt={user.name}
-                className="rounded-full h-20 w-20 object-cover"
-              />
+              {
+                      page.props.auth.user?.profile_photo_path?
+                      (<img
+                        className="rounded-full h-20 w-20 object-cover"
+                        src={`/storage/${user.profile_photo_path}`}
+                      alt={user.name}
+                    />):
+                      (
+                      <img
+                      className="rounded-full h-20 w-20 object-cover"
+                      src={`${user.profile_photo_url}`}
+                        alt={user.name}
+                      />)}
             </div>
           )}
 

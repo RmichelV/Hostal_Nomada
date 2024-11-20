@@ -15,7 +15,6 @@ return new class extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('room_id')->constrained()->onDelete('cascade');
             $table->integer('number_of_rooms');
             $table->integer('number_of_people')->default(1);
             $table->timestamp('res_date')->default(DB::raw('CURRENT_TIMESTAMP'));;

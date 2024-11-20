@@ -16,14 +16,14 @@ const RoomTypes = ({ roomTypes = [] }) => {
   const [roomTypesData, setRoomTypesData] = useState(roomTypes)
   const [selectedRoomType, setSelectedRoomType] = useState(null)
 
-  const fetchRoomTypes = async () => {
-    try {
-      const response = await axios.get('/api/roomtypes')
-      setRoomTypesData(response.data)
-    } catch (error) {
-      console.error("Error recibiendo tipos de habitación:", error)
-    }
-  }
+  // const fetchRoomTypes = async () => {
+  //   try {
+  //     const response = await axios.get('/api/roomtypes')
+  //     setRoomTypesData(response.data)
+  //   } catch (error) {
+  //     console.error("Error recibiendo tipos de habitación:", error)
+  //   }
+  // }
 
   useEffect(() => {
     fetchRoomTypes()
@@ -59,14 +59,33 @@ const RoomTypes = ({ roomTypes = [] }) => {
     })
   }
 
-  const handleAddOrUpdate = (roomType=[]) => {
+  const handleAddOrUpdate = (roomType) => {
+    if (!roomType) {
+      console.error("El objeto roomType está vacío o es undefined.");
+      return;
+    }
+  
     if (selectedRoomType) {
-      setRoomTypesData(roomTypesData.map(rt => rt.id === roomType.id ? roomType : rt));
+      setRoomTypesData((prevData) =>
+        prevData.map((rt) => (rt.id === roomType.id ? roomType : rt))
+      );
     } else {
-      setRoomTypesData([...roomTypesData, roomType]);
+      setRoomTypesData((prevData) => [roomType, ...prevData]);
     }
     setIsFormOpen(false);
-  }
+  };
+  
+  const fetchRoomTypes = async () => {
+    try {
+      const response = await axios.get('/api/roomtypes');
+      if (response.status === 200) {
+        setRoomTypesData(response.data); // Actualiza la tabla
+      }
+    } catch (error) {
+      console.error("Error recibiendo tipos de habitación:", error);
+    }
+  };
+  
 
   return (
     <AppLayout>

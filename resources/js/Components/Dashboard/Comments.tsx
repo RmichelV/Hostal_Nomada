@@ -64,16 +64,7 @@ export default function CustomerComments() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
-                <Input
-                  id="name"
-                  value={newComment.name}
-                  onChange={(e) => setNewComment({...newComment, name: e.target.value})}
-                  placeholder="Tu nombre"
-                  required
-                />
-              </div>
+
               <div>
                 <label htmlFor="comment" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Comentario</label>
                 <Textarea

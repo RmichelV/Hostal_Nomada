@@ -61,7 +61,7 @@ const EmployeeForm = ({ users, shifts, employee, onFormSubmit }) => {
         id={id}
         type={type}
         name={id}
-        value={formData[id]}
+        value={formData[id]}  // Asegúrate de que el value sea formData[id]
         onChange={(e) => handleChange(id, e.target.value)}
         required={required}
         className="w-full"

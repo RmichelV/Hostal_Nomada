@@ -26,7 +26,7 @@ class ReservationController extends Controller
     {
         $user = Auth::user(); 
     
-        if ($user && ($user->rol_id == 1 || $user->rol_id == 8)) {
+        if ($user && ($user->rol_id == 1 || $user->rol_id  == 9)) {
             $reservations = Reservation::with(['user', 'roomTypes'])  
                 ->get();
         } else {
@@ -40,6 +40,7 @@ class ReservationController extends Controller
             'reservations' => $reservations,  
             'users' => $users,
             'room_types' => $room_types,
+
         ]);
     
     }

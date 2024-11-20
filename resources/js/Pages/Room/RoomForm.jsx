@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/Components/ui/button"
+import { Input } from "@/Components/ui/input"
+import { Label } from "@/Components/ui/label"
 import Swal from 'sweetalert2'
 
 const RoomForm = ({ roomTypes, room, onFormSubmit }) => {
   const [formData, setFormData] = useState({
     name: '',
     room_type_id: '',
-    status: true, // Default status to true (active)
+    status: 'Libre', // Valor por defecto
   })
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
@@ -19,7 +19,7 @@ const RoomForm = ({ roomTypes, room, onFormSubmit }) => {
       setFormData({
         name: room.name || '',
         room_type_id: room.room_type_id || '',
-        status: room.status !== undefined ? room.status : true, // Handle the status if the room exists
+        status: room.status || 'Libre',
       })
     }
   }, [room])
@@ -85,16 +85,20 @@ const RoomForm = ({ roomTypes, room, onFormSubmit }) => {
           </div>
         </div>
 
-        <div className="flex gap-4 items-center">
-          <Label htmlFor="status" className="text-right">¿Está activa?</Label>
-          <input
-            id="status"
-            type="checkbox"
-            checked={formData.status}
-            onChange={(e) => handleChange('status', e.target.checked)}
-            className="h-5 w-5"
-          />
-          {errors.status && <p className="text-red-500 text-sm">{errors.status}</p>}
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <Label htmlFor="status" className="text-right">Estado</Label>
+            <select
+              value={formData.status}
+              onChange={(e) => handleChange('status', e.target.value)}
+              className="w-full text-slate-800 border border-gray-300 rounded-md px-3 py-2 bg-white"
+            >
+              <option value="Libre">Libre</option>
+              <option value="Ocupada">Ocupada</option>
+              <option value="No acceso">No acceso</option>
+            </select>
+            {errors.status && <p className="text-red-500 text-sm">{errors.status}</p>}
+          </div>
         </div>
 
         <Button type="submit" className="mt-6 w-full sm:w-auto" disabled={loading}>

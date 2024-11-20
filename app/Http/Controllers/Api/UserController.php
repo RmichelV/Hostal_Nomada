@@ -30,7 +30,8 @@ class UserController extends Controller
     {
         try {
             $data = $request->validated();
-            $data['password'] = Hash::make($data['password']); // Encripta la contraseña
+            $data['name'] = ucwords(strtolower($data['name'])); 
+            $data['password'] = Hash::make($data['password']); 
             $user = User::create($data);
             return response()->json($user, 201);
         } catch (\Exception $e) {

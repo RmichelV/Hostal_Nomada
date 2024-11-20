@@ -7,6 +7,8 @@ use App\Http\Requests\StoreReservationRequest;
 use App\Http\Requests\UpdateReservationRequest;
 use App\Models\ReservationRoomType;
 use App\Models\RoomType;
+use App\Models\User;
+use App\Notifications\NuevaReservaNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -21,7 +23,7 @@ class ReservationController extends Controller
     {
         $user = Auth::user();  // Obtener el usuario autenticado
     
-        if ($user && ($user->rol_id == 1 || $user->rol_id == 8)) {
+        if ($user && ($user->rol_id == 1 || $user->rol_id == 9)) {
             // Si el usuario tiene rol de administrador o un rol especial (1 u 8), mostramos todas las reservas
             $reservations = Reservation::with(['user', 'roomTypes'])  // Cargar los usuarios y tipos de habitación relacionados
                 ->get();
@@ -82,7 +84,14 @@ class ReservationController extends Controller
             // }
 
             $reservation->total_price = $reservation->calculateTotalPrice();
-            $reservation->save(); // Guardar el total del precio
+            $reservation->save();
+
+            $usuarios = User::whereIn('rol_id', [1,9])->get();
+
+        
+            foreach ($usuarios as $usuario) {
+                $usuario->notify(new NuevaReservaNotification($reservation));
+            }
 
             return response()->json([
                 'message' => 'Reserva creada exitosamente',
@@ -94,7 +103,7 @@ class ReservationController extends Controller
         } catch (\Exception $e) {
             // Manejo de excepciones y error
             return response()->json([
-                'message' => 'Error al crear la reserva',
+                'message' => $e,
                 'error' => $e->getMessage(),
                 'status' => 500,
             ], 500);
@@ -112,12 +121,37 @@ class ReservationController extends Controller
     /**
      * Actualizar una reserva existente
      */
-    public function update(UpdateReservationRequest $request, Reservation $reservation)
+    public function update(Request $request, Reservation $reservation)
     {
-
-        if ($request->has('rooms')) {
-            $reservation->roomTypes()->detach();
+        // Validación de los datos
+        $validator = Validator::make($request->all(), [
+            'check_in' => 'required|date|after_or_equal:today',
+            'check_out' => 'required|date|after_or_equal:check_in',
+            'number_of_people' => 'required|integer|min:1',
+            'rooms' => 'required|array',
+            'rooms.*.room_type_id' => 'required|exists:room_types,id',
+            'rooms.*.quantity' => 'required|integer|min:1',
+        ]);
     
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validación fallida',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+    
+        try {
+            // Actualizar los detalles de la reserva
+            $reservation->update([
+                'check_in' => $request->check_in,
+                'check_out' => $request->check_out,
+                'number_of_people' => $request->number_of_people,
+            ]);
+    
+            // Eliminar las habitaciones existentes asociadas con la reserva
+            ReservationRoomType::where('reservation_id', $reservation->id)->delete();
+    
+            // Agregar las nuevas habitaciones seleccionadas
             foreach ($request->rooms as $room) {
                 ReservationRoomType::create([
                     'reservation_id' => $reservation->id,
@@ -125,17 +159,28 @@ class ReservationController extends Controller
                     'quantity' => $room['quantity'],
                 ]);
             }
+    
+            // Recalcular el precio total
+            $reservation->total_price = $reservation->calculateTotalPrice();
+            $reservation->save();
+    
+            return response()->json([
+                'message' => 'Reserva actualizada exitosamente',
+                'data' => $reservation,
+                'rooms' => $reservation->roomTypes, // Retornar las habitaciones asociadas
+                'status' => 200,
+            ], 200);
+    
+        } catch (\Exception $e) {
+            // Manejo de excepciones
+            return response()->json([
+                'message' => 'Error al actualizar la reserva',
+                'error' => $e->getMessage(),
+                'status' => 500,
+            ], 500);
         }
-    
-        $reservation->total_price = $reservation->calculateTotalPrice();
-        $reservation->save();
-    
-        return response()->json([
-            'message' => 'Reserva actualizada exitosamente.',
-            'data' => $reservation,
-            'status' => 200,
-        ], 200);
     }
+    
     
 
     public function destroy(Reservation $reservation)

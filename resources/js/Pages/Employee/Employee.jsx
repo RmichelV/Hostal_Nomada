@@ -87,7 +87,7 @@ const Employees = ({ employees = [], users = [], shifts = [] }) => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {employeesData.map((employee, index) => (
+                  {employees.map((employee, index) => (
                     <TableRow key={employee.id}>
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>{employee.user.name}</TableCell>

@@ -14,23 +14,29 @@ class EmployeeController extends Controller
     public function showEmployeePage()
     {
         $employees = Employee::where('isDeleted', 0)
-        ->whereHas('user', function ($query) {
-            $query->where('isDeleted', 0);
-        })
-        ->with(['user:id,name', 'shift:id,name'])
-        ->get();
-        $activeEmployeeUserIds = Employee::where('isDeleted', 0)->pluck('user_id');
-
-        $users = User::where('isDeleted', 0)
-            ->where('rol_id', '!=', 2)
-            ->whereNotIn('id', $activeEmployeeUserIds)
+            ->whereHas('user', function ($query) {
+                $query->where('isDeleted', 0);
+            })
+            ->with(['user:id,name', 'shift:id,name'])
             ->get();
-                $shifts = Shift::all();
-
+    
+        // Obtener los IDs de usuarios que ya están asignados a empleados activos
+        $activeEmployeeUserIds = Employee::where('isDeleted', 0)->pluck('user_id');
+    
+        // Obtener todos los usuarios disponibles, sin excluir los usuarios asignados actualmente
+        $users = User::where('isDeleted', 0)
+            ->where('rol_id', '!=', 3)
+            ->whereNotIn('id', $activeEmployeeUserIds)
+            ->orWhereIn('id', $employees->pluck('user_id')) // Incluir los usuarios asignados actualmente
+            ->get();
+    
+        $shifts = Shift::all();
+    
         return Inertia::render('Employee/Employee', [
             'employees' => $employees,
             'users' => $users,
             'shifts' => $shifts,
         ]);
     }
+    
 }

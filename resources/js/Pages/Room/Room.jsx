@@ -58,7 +58,11 @@ const Rooms = ({ rooms = [], roomTypes = [] }) => {
       }
     })
   }
-
+  const statusColors = {
+    Ocupada: 'text-red-600',
+    Libre: 'text-green-600',
+    'No acceso': 'text-gray-600',
+  };
   return (
     <AppLayout>
       <div className="container mx-auto p-4">
@@ -97,7 +101,9 @@ const Rooms = ({ rooms = [], roomTypes = [] }) => {
                             room.status ? 'text-green-600' : 'text-red-600'
                           } font-semibold`}
                         >
-                          {room.status ? 'Activa' : 'Inactiva'}
+                          <div className={`font-bold ${statusColors[room.status] || 'text-black'}`}>
+                              {room.status}
+                            </div>                        
                         </span>
                       </TableCell>
                       <TableCell>

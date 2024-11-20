@@ -25,7 +25,7 @@ class StoreUserRequest extends FormRequest
                 'rol_id' => 'required|exists:rols,id',
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
-                'identification_number' => 'required|integer|unique:users,identification_number',
+                'identification_number' => 'required|integer|unique:users,identification_number|max:9999999999',
                 'birthday' => 'required|date|before:today|after_or_equal:' . now()->subYears(90)->toDateString() . '|before_or_equal:' . now()->subYears(18)->toDateString(),
                 'phone' => [
                                 'nullable',
