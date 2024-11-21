@@ -10,6 +10,7 @@ import Modal from '@/Components/Modal'
 import Swal from 'sweetalert2'
 import RoomTypeForm from './RoomTypeForm'
 import AppLayout from '@/Layouts/AppLayout'
+import RoomAndSuppliesManager from './Roommanager'
 
 const RoomTypes = ({ roomTypes = [] }) => {
   const [isFormOpen, setIsFormOpen] = useState(false)
@@ -111,8 +112,8 @@ const RoomTypes = ({ roomTypes = [] }) => {
                     <TableHead>Descripción</TableHead>
                     <TableHead className="hidden md:table-cell">Cantidad</TableHead>
                     <TableHead className="hidden sm:table-cell">Precio</TableHead>
-                    <TableHead className="hidden sm:table-cell">Acciones</TableHead>
-                    <TableHead>Acciones</TableHead>
+                    <TableHead className="hidden sm:table-cell ">Imagen</TableHead>
+                    <TableHead className='text-center'>Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -160,6 +161,7 @@ const RoomTypes = ({ roomTypes = [] }) => {
           </Modal>
         )}
       </div>
+      {/* <RoomAndSuppliesManager/> */}
     </AppLayout>
   )
 }

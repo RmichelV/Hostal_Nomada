@@ -141,17 +141,17 @@ class ReservationController extends Controller
         }
     
         try {
-            // Actualizar los detalles de la reserva
+
+            $statusChangedToAccepted = $reservation->status !== 0 && $request->status === 0;
+
             $reservation->update([
                 'check_in' => $request->check_in,
                 'check_out' => $request->check_out,
                 'number_of_people' => $request->number_of_people,
             ]);
     
-            // Eliminar las habitaciones existentes asociadas con la reserva
             ReservationRoomType::where('reservation_id', $reservation->id)->delete();
     
-            // Agregar las nuevas habitaciones seleccionadas
             foreach ($request->rooms as $room) {
                 ReservationRoomType::create([
                     'reservation_id' => $reservation->id,
@@ -160,10 +160,13 @@ class ReservationController extends Controller
                 ]);
             }
     
-            // Recalcular el precio total
             $reservation->total_price = $reservation->calculateTotalPrice();
             $reservation->save();
+            if ($statusChangedToAccepted) {
+                $user = $reservation->user;
     
+                $user->notify(new NuevaReservaNotification($reservation)); 
+            }
             return response()->json([
                 'message' => 'Reserva actualizada exitosamente',
                 'data' => $reservation,

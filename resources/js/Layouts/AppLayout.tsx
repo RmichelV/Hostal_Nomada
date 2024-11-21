@@ -13,6 +13,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import Sidebar from './Sidebar';
 import { Inertia } from '@inertiajs/inertia';
 import axios from 'axios';
+import { BellRing } from 'lucide-react';
 
 interface Props {
   title: string;
@@ -130,20 +131,12 @@ console.info(page.props.auth.user?.profile_photo_path? 'hay '+page.props.auth.us
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="relative p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-white"
+                <BellRing
+                  className="h-5 w-5 text-white"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 17h5l-1.405-1.405M15 17a3.001 3.001 0 00-6 0m6 0a3.001 3.001 0 01-6 0M9 3v1m0 0A5 5 0 1119 9a5 5 0 00-5-5m0 0V3"
-                  />
-                </svg>
+                />
                 {notifications.length > 0 && (
                   <span className="absolute top-0 right-0 inline-block w-4 h-4 text-xs font-medium text-center text-white bg-red-600 rounded-full">
                     {notifications.length}
@@ -161,7 +154,7 @@ console.info(page.props.auth.user?.profile_photo_path? 'hay '+page.props.auth.us
                           key={notification.id}
                           className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
                         >
-                          Mensaje: {notification.data.cliente} ha realizado una nueva reserva.
+                          Mensaje: {notification.data.message}.
                           <a href={`/reservas/${notification.data.reserva_id}`} className="text-blue-500 hover:underline">
                             Ver detalles
                           </a>

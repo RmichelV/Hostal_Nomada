@@ -1,22 +1,21 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LayoutDashboard, Menu, X,Users } from 'lucide-react';
+import { LayoutDashboard, Menu, X,Users,Salad,SquareUserRound,BedDouble,DoorOpen,HandPlatter   } from 'lucide-react';
 import NavLink from '@/Components/NavLink';
 import { Button } from '@/Components/ui/button';
 // import '../../css/app.css';
 
 const Sidebar = ({ head }) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const navItems = [
     { icon: LayoutDashboard, text: 'Panel de Control', route: 'dashboard' },
-    { icon: LayoutDashboard, text: 'Usuarios', route: 'user' },
+    { icon: SquareUserRound, text: 'Usuarios', route: 'user' },
     { icon: Users, text: 'Empleados', route: 'employee' },
-    { icon: Users, text: 'Tipos de Habitaciones', route: 'room_type' },
-    { icon: LayoutDashboard, text: 'Habitaciones', route: 'room' },
-    { icon: LayoutDashboard, text: 'Platos', route: 'dish' },
-    { icon: LayoutDashboard, text: 'Insumos', route: 'supply' },
+    { icon: DoorOpen, text: 'Tipos de Habitaciones', route: 'room_type' },
+    { icon: BedDouble, text: 'Habitaciones', route: 'room' },
+    { icon: Salad, text: 'Platos', route: 'dish' },
+    { icon: HandPlatter , text: 'Insumos', route: 'supply' },
     
   ];
 

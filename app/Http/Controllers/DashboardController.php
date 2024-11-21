@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Reservation;
 use App\Models\Room;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -19,7 +20,7 @@ class DashboardController extends Controller
 
         $availableRooms = Room::where('status', 'Libre')->count();
 
-        $totalEarnings = Reservation::where('status', '1')->sum('total_price');
+        $totalEarnings = Reservation::where('status', 'Finalizada')->sum('total_price');
 
         return response()->json([
             'userCount' => $userCount,
@@ -29,4 +30,13 @@ class DashboardController extends Controller
             'totalEarnings' => $totalEarnings,
         ]);
     }
+    public function getComments()
+    {
+        $comments = DB::table('comments')->join('users', 'comments.user_id', '=', 'users.id')
+            ->select('users.name as user_name', 'comments.content', 'comments.c_date')
+            ->get();
+
+        return response()->json($comments);
+    }
+
 }

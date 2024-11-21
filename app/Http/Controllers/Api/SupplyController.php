@@ -11,7 +11,7 @@ class SupplyController extends Controller
 {
     public function index()
     {
-        return Supply::get();
+        return Supply::all();
     }
 
     public function store(Request $request)

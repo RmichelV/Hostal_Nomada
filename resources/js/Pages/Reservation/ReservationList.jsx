@@ -101,10 +101,10 @@ const ReservationList = ({ reservations = [], users = [], room_types = [], notif
                     <TableHead>Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
-                {Array.isArray(reservationListData) && reservationListData.map((reservation, index) => (
+                {/*  */}
 
                 <TableBody>
-                  {reservationListData.map((reservation, index) => (
+                  {Array.isArray(reservationListData) && reservationListData.map((reservation, index) => (
                     <TableRow key={reservation?.id}>
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>{reservation?.user.name}</TableCell>
@@ -113,7 +113,7 @@ const ReservationList = ({ reservations = [], users = [], room_types = [], notif
                       <TableCell>{reservation?.check_out}</TableCell>
                       <TableCell>
                         <div className="flex flex-wrap justify-center gap-2">
-                          {reservation?.status === 1 && (
+                          {reservation?.status === 'En Proceso'||reservation?.status === 'Pendiente' && (
                             <>
                               <Button onClick={() => handleEdit(reservation)} size="sm">
                                 <Pencil className="h-4 w-4" />
@@ -128,7 +128,7 @@ const ReservationList = ({ reservations = [], users = [], room_types = [], notif
                     </TableRow>
                   ))}
                 </TableBody>
-              ))}
+              {/* ))} */}
               </Table>
             </div>
           </CardContent>

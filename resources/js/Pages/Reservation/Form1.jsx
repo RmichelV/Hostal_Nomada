@@ -126,7 +126,7 @@ export default function ResForm({
                                         </div>
                                     </div>
                                 </TableCell>
-                                <TableCell>${habitacion.price}</TableCell>
+                                <TableCell>Bs.{habitacion.price}</TableCell>
                                 <TableCell>
                                     <div className="flex items-center space-x-2">
                                         <Button onClick={() => ajustarCantidad(habitacion.id, -1)}><MinusIcon className="h-4 w-4" /></Button>

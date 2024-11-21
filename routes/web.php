@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\RoomController as ApiRoomController;
 use App\Http\Controllers\Api\RoomTypeController as ApiRoomTypeController;
 use App\Http\Controllers\Api\SupplyController as ApiSupplyController;
 use App\Http\Controllers\Api\UserController as ApiUserController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DishController;
 use App\Http\Controllers\EmployeeController;
@@ -37,6 +38,7 @@ Route::get('/api/roomtypes', [ApiRoomTypeController::class, 'index']);
 Route::get('api/restaurant_dishes', [ApiRestaurantDishController::class, 'index']);
 Route::get('api/supplies', [ApiSupplyController::class, 'index']);
 Route::get('/restaurant', [RestaurantHomeController::class, 'showRestaurantPage'])->name('restaurant');
+Route::get('/api/comments', [CommentController::class, 'index']);
 
 
 
@@ -54,8 +56,19 @@ Route::middleware([
     Route::get('/reservation', [ReservationController::class, 'showReservationPage'])->name('reservation');
     Route::get('/reservationlist', [ReservationController::class, 'showReseListPage'])->name('reservationlist');
     Route::apiResource('/api/reservations', ApiReservationController::class);
+    Route::post('/api/comments', [CommentController::class, 'store']);
+    Route::delete('/api/comments/{id}', [CommentController::class, 'destroy']);
+
     Route::get('/forecast', [PythonAnalyticsController::class, 'getForecast']);
     Route::get('/dashboard-data', [DashboardController::class, 'getDashboardData']);
+    Route::get('/notifications', function () {
+        return Auth::user()->unreadNotifications;
+    })->name('notifications.index');
+    
+    Route::post('/notifications/read', function () {
+        Auth::user()->unreadNotifications->markAsRead();
+        return response()->json(['message' => 'Notificaciones marcadas como leídas']);
+    })->name('notifications.markRead');
 
 
 });
@@ -110,13 +123,5 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/notifications', function () {
-        return Auth::user()->unreadNotifications; // Devuelve solo las no leídas
-    })->name('notifications.index');
-    
-    Route::post('/notifications/read', function () {
-        Auth::user()->unreadNotifications->markAsRead();
-        return response()->json(['message' => 'Notificaciones marcadas como leídas']);
-    })->name('notifications.markRead');
 
 });
