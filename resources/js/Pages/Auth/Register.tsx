@@ -54,7 +54,12 @@ export default function Registrar({ countries=[] }: RegistrarProps) {
             type="text"
             className="mt-1 block w-full"
             value={form.data.name}
-            onChange={(e) => form.setData('name', e.currentTarget.value)}
+            onChange={(e) => {
+              const value = e.currentTarget.value;
+              if (/^[a-zA-Z\s]*$/.test(value)) { // Solo permite letras y espacios
+                form.setData('name', value);
+              }
+            }}
             required
             autoFocus
             autoComplete="name"
@@ -162,7 +167,16 @@ export default function Registrar({ countries=[] }: RegistrarProps) {
             type="date"
             className="mt-1 block w-full"
             value={form.data.birthday}
-            onChange={(e) => form.setData('birthday', e.currentTarget.value)}
+            // onChange={(e) => form.setData('birthday', e.currentTarget.value)}
+            onChange={(e) => {
+              const dateValue = e.target.value;
+              const [year, month, day] = dateValue.split("-");
+
+              if (year.length > 4) {
+                  return; 
+              }
+              form.setData('birthday', dateValue); 
+          }}
             required
           />
           <InputError className="mt-2" message={form.errors.birthday} />
