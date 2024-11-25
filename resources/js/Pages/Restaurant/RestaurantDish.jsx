@@ -21,7 +21,7 @@ import {
 } from '@/Components/ui/card';
 import Modal from '@/Components/Modal';
 import Swal from 'sweetalert2';
-import DishForm from './DishForm'; // Formulario para agregar/editar platos
+import DishForm from './DishForm'; 
 import AppLayout from '@/Layouts/AppLayout';
 
 const RestaurantDishes = ({ dishes = [] }) => {
@@ -117,7 +117,7 @@ const RestaurantDishes = ({ dishes = [] }) => {
                     <TableHead>Descripción</TableHead>
                     <TableHead>Precio</TableHead>
                     <TableHead>Imagen</TableHead>
-                    <TableHead>Acciones</TableHead>
+                    <TableHead className='text-center'>Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -161,7 +161,14 @@ const RestaurantDishes = ({ dishes = [] }) => {
             show={isFormOpen}
             onClose={() => setIsFormOpen(false)}
           >
-            <DishForm dish={selectedDish || {}} onFormSubmit={handleAddOrUpdate} />
+            <DishForm 
+              dish={selectedDish || {}} 
+              onFormSubmit={handleAddOrUpdate} 
+              onCancel={() => {
+                setIsFormOpen(false)
+                setSelectedDish(null)
+              }}
+            />
           </Modal>
         )}
       </div>

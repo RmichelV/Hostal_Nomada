@@ -197,7 +197,7 @@ console.info(page.props.auth.user?.profile_photo_path? 'hay '+page.props.auth.us
                   )}
                 >
                   <DropdownLink href={route('profile.show')}>Perfil</DropdownLink>
-                  <form onSubmit={logout}>
+                  <form onSubmit={handleLogout}>
                     <DropdownLink as="button">Cerrar sesión</DropdownLink>
                   </form>
                 </Dropdown>
@@ -309,17 +309,17 @@ console.info(page.props.auth.user?.profile_photo_path? 'hay '+page.props.auth.us
                   Perfil
                 </ResponsiveNavLink>
 
-                {page.props.jetstream.hasApiFeatures ? (
+                {/* {page.props.jetstream.hasApiFeatures ? (
                   <ResponsiveNavLink
                     href={route('api-tokens.index')}
                     active={route().current('api-tokens.index')}
                   >
                     Tokens API
                   </ResponsiveNavLink>
-                ) : null}
+                ) : null} */}
 
                 {/* <!-- Autenticación --> */}
-                <form method="POST" onSubmit={logout}>
+                <form method="POST" onSubmit={handleLogout}>
                   <ResponsiveNavLink as="button">Cerrar sesión</ResponsiveNavLink>
                 </form>
 

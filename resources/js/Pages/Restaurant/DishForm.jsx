@@ -4,8 +4,9 @@ import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import Swal from 'sweetalert2';
+import { Textarea } from '@/Components/ui/textarea';
 
-const DishForm = ({ dish = {}, onFormSubmit }) => {
+const DishForm = ({ dish = {}, onFormSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     dishname: '',
     description: '',
@@ -28,24 +29,31 @@ const DishForm = ({ dish = {}, onFormSubmit }) => {
 
   const handleChange = (name, value) => {
     setFormData(prevData => ({ ...prevData, [name]: value }));
-    setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
+    setErrors(prevErrors => ({ ...prevErrors, [name]: '' })); 
   };
 
   const handleFileChange = (e) => {
     setFormData(prevData => ({ ...prevData, dish_image: e.target.files[0] }));
+    setErrors(prevErrors => ({ ...prevErrors, dish_image: '' })); 
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErrors({});
+    setErrors({}); 
 
     const formDataToSend = new FormData();
+
     Object.keys(formData).forEach((key) => {
-      if (key === 'dish_image' && formData[key] !== null) {
-        formDataToSend.append(key, formData[key]);
+      if (key === 'dish_image') {
+
+        if (!formData[key] && dish.dish_image) {
+          formDataToSend.append(key, null);  
+        } else if (formData[key]) {
+          formDataToSend.append(key, formData[key]); 
+        }
       } else {
-        formDataToSend.append(key, formData[key]);
+        formDataToSend.append(key, formData[key]); 
       }
     });
 
@@ -55,44 +63,33 @@ const DishForm = ({ dish = {}, onFormSubmit }) => {
         response = await axios.post(`/api/restaurant_dishes/${dish.id}`, formDataToSend, {
           headers: { 'X-HTTP-Method-Override': 'PUT' },
         });
-
-        if (response.status === 200) {
-          Swal.fire("¡Éxito!", "Plato actualizado exitosamente", "success");
-          onFormSubmit(formData);
-        }
-        else {
-          Swal.fire("Error", "No se pudo actualizar el tipo de habitación", "error");
-        }
-        onFormSubmit(formData);
       } else {
         response = await axios.post('/api/restaurant_dishes', formDataToSend);
-
-        if (response.status >= 200 && response.status <= 250) {
-          Swal.fire("¡Éxito!", "Plato agregado exitosamente", "success");
-          onFormSubmit(formData);
-        }
-        else {
-          Swal.fire("Error", "No se pudo agregar el tipo de habitación", "error");
-        }
       }
 
-      if (response && response.status === 422) {
-        setErrors(response.data.errors || {});
+      if (response.status === 200 || response.status === 201) {
+        Swal.fire("¡Éxito!", `Plato ${dish?.id ? "actualizado" : "agregado"} exitosamente`, "success");
+        onFormSubmit(formData);
       }
     } catch (error) {
-      console.error(error);
-      Swal.fire("Error", "Ocurrió un error inesperado", "error");
+      if (error.response && error.response.status === 422) {
+        setErrors(error.response.data.errors || {});
+      } else {
+        Swal.fire("Error", "Ocurrió un error inesperado", "error");
+      }
+    } finally {
+      setLoading(false);
     }
+};
 
-    setLoading(false);
-  };
+  
 
   return (
     <div className="p-6 flex flex-col max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-6 text-center">
         {dish && dish.id ? 'Editar Plato' : 'Agregar Nuevo Plato'}
       </h1>
-      <form onSubmit={handleSubmit} className="space-y-2">
+      <form onSubmit={handleSubmit} className="space-y-1">
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 items-center">
           <Label htmlFor="dishname" className="text-right">Nombre del Plato</Label>
           <Input
@@ -100,21 +97,20 @@ const DishForm = ({ dish = {}, onFormSubmit }) => {
             name="dishname"
             value={formData.dishname}
             onChange={(e) => handleChange('dishname', e.target.value)}
-            required
           />
-          {errors.dishname && <p className="text-red-500 text-sm">{errors.dishname}</p>}
+          {errors.dishname && <p className="text-red-500 text-sm">{errors.dishname[0]}</p>}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 items-center">
           <Label htmlFor="description" className="text-right">Descripción</Label>
-          <Input
+          <Textarea
             id="description"
             name="description"
             value={formData.description}
             onChange={(e) => handleChange('description', e.target.value)}
-            required
+            className="w-full min-h-[100px]"
           />
-          {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
+          {errors.description && <p className="text-red-500 text-sm">{errors.description[0]}</p>}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 items-center">
@@ -122,13 +118,11 @@ const DishForm = ({ dish = {}, onFormSubmit }) => {
           <Input
             id="price"
             name="price"
-            type="number"
             step="0.01"
             value={formData.price}
             onChange={(e) => handleChange('price', e.target.value)}
-            required
           />
-          {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
+          {errors.price && <p className="text-red-500 text-sm">{errors.price[0]}</p>}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 items-center">
@@ -139,15 +133,26 @@ const DishForm = ({ dish = {}, onFormSubmit }) => {
             type="file"
             onChange={handleFileChange}
           />
-          {errors.dish_image && <p className="text-red-500 text-sm">{errors.dish_image}</p>}
+          {errors.dish_image && <p className="text-red-500 text-sm">{errors.dish_image[0]}</p>}
         </div>
+        
+        <div className="flex justify-center gap-4 mt-6">
 
-        <Button type="submit" className="mt-6 w-full sm:w-auto" disabled={loading}>
-          {loading ? 'Enviando...' : dish && dish.id ? 'Actualizar' : 'Agregar'}
-        </Button>
+          <Button type="submit" className="w-full sm:w-auto" disabled={loading}>
+            {loading ? 'Enviando...' : dish && dish.id ? 'Actualizar' : 'Agregar'}
+          </Button>
+          <Button
+              type="button"
+              className="w-full sm:w-auto bg-gray-300 hover:bg-gray-400 text-gray-700"
+              onClick={onCancel}
+            >
+            Cancelar
+          </Button>
+        </div>
       </form>
     </div>
   );
 };
 
 export default DishForm;
+

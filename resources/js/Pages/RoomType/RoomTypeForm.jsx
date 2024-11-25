@@ -256,9 +256,9 @@ const RoomTypeForm = ({ roomType = {}, onFormSubmit }) => {
                 </div>
             </TableCell>
             <TableCell>
-                <Button type="button" variant="destructive" onClick={() => handleRemoveSupply(index)}>
+                {/* <Button type="button" variant="destructive" onClick={() => handleRemoveSupply(index)}>
                     Eliminar
-                </Button>
+                </Button> */}
             </TableCell>
         </TableRow>
     ))}
