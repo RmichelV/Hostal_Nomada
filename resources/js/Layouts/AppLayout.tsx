@@ -184,7 +184,7 @@ console.info(page.props.auth.user?.profile_photo_path? 'hay '+page.props.auth.us
                       page.props.auth.user?.profile_photo_path?
                       (<img
                       className="h-8 w-8 rounded-full object-cover"
-                      src={`/storage/`+page.props.auth.user?.profile_photo_path}
+                      src={`/img/`+page.props.auth.user?.profile_photo_path}
                       alt={page.props.auth.user?.name}
                     />):
                       (

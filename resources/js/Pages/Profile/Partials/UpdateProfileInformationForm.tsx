@@ -130,7 +130,7 @@ export default function FormularioActualizarInformacionPerfil({ user }: Props) {
                       page.props.auth.user?.profile_photo_path?
                       (<img
                         className="rounded-full h-20 w-20 object-cover"
-                        src={`/storage/${user.profile_photo_path}`}
+                        src={`/img/${user.profile_photo_path}`}
                       alt={user.name}
                     />):
                       (
@@ -139,6 +139,7 @@ export default function FormularioActualizarInformacionPerfil({ user }: Props) {
                       src={`${user.profile_photo_url}`}
                         alt={user.name}
                       />)}
+
             </div>
           )}
 
@@ -163,6 +164,8 @@ export default function FormularioActualizarInformacionPerfil({ user }: Props) {
           <InputError message={form.errors.photo} className="mt-2" />
         </div>
       ) : null}
+
+      
 
       {/* <!-- Nombre --> */}
       <div className="col-span-6 sm:col-span-4">
