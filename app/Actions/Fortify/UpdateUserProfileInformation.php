@@ -18,9 +18,12 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     public function update(User $user, array $input): void
     {
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'name' => ['required', 'string', 'max:255','regex:/^([A-ZÁÉÍÓÚÑÇĆ][a-záéíóúñçć]+)(\s[A-ZÁÉÍÓÚÑÇĆ][a-záéíóúñçć]+)*$/'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id),'regex:/^[\w\.-]+@[\w\.-]+\.(com|net|edu)$/'],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
+        ],[
+            'name.regex'=>'El/Los nombre(s) deben empezar por una letra mayúscula y no contener números',
+            'email.regex'=>'El correo electronico debe terminar en .com, .net o .edu]'
         ])->validateWithBag('updateProfileInformation');
 
         if (isset($input['photo'])) {
