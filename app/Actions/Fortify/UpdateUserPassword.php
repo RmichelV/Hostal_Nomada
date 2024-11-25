@@ -20,9 +20,18 @@ class UpdateUserPassword implements UpdatesUserPasswords
     {
         Validator::make($input, [
             'current_password' => ['required', 'string', 'current_password:web'],
-            'password' => $this->passwordRules(),
-        ], [
-            'current_password.current_password' => __('The provided password does not match your current password.'),
+            // 'password' => $this->passwordRules(),
+            'password' =>[ 'required',
+            'string',
+            'min:8',
+            'max:50',
+            'regex:/[A-Z]/', 
+            'regex:/[a-z]/', 
+            'regex:/[0-9]/', 
+            'regex:/[\W_]/', 
+            'confirmed',]
+        ], ['password'=>'La nueva contraseña debe tener al menos una letra mayúscula, minúscula, un número y un caracter especial',
+            'current_password.current_password' => __('The provided password does not match your current password.',),
         ])->validateWithBag('updatePassword');
 
         $user->forceFill([

@@ -16,9 +16,9 @@ interface Props {
 }
 
 export default function ConfirmsPassword({
-  title = 'Confirm Password',
-  content = 'For your security, please confirm your password to continue.',
-  button = 'Confirm',
+  title = 'Confirmar Contraseña',
+  content = 'Por tu seguridad, confirma tu contraseña para continuar',
+  button = 'Confirmar',
   onConfirm,
   children,
 }: PropsWithChildren<Props>) {
@@ -82,7 +82,7 @@ export default function ConfirmsPassword({
               ref={passwordRef}
               type="password"
               className="mt-1 block w-3/4"
-              placeholder="Password"
+              placeholder="Contraseña"
               value={form.password}
               onChange={e =>
                 setForm({ ...form, password: e.currentTarget.value })
@@ -94,7 +94,7 @@ export default function ConfirmsPassword({
         </DialogModal.Content>
 
         <DialogModal.Footer>
-          <SecondaryButton onClick={closeModal}>Cancel</SecondaryButton>
+          <SecondaryButton onClick={closeModal}>Cancelar</SecondaryButton>
 
           <PrimaryButton
             className={classNames('ml-2', { 'opacity-25': form.processing })}
