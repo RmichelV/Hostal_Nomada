@@ -23,9 +23,17 @@ class StoreUserRequest extends FormRequest
         return [
                 'country_id' => 'required|exists:countries,id',
                 'rol_id' => 'required|exists:rols,id',
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email',
-                'identification_number' => 'required|integer|unique:users,identification_number|max:9999999999',
+                'name' => 'required|string|max:255|regex:/^([A-ZÁÉÍÓÚÑÇĆ][a-záéíóúñçć]+)(\s[A-ZÁÉÍÓÚÑÇĆ][a-záéíóúñçć]+)*$/',
+                'email' => [
+                'required',
+                'email',
+                'regex:/^[\w\.-]+@[\w\.-]+\.(com|net|edu)$/',
+                'unique:users,email'],
+                'identification_number' => [
+                    'required',
+                    'regex:/^(?:[1-9]\d{3,9})$/',
+                    'unique:users,identification_number',
+                    'max:9999999999'],
                 'birthday' => 'required|date|before:today|after_or_equal:' . now()->subYears(90)->toDateString() . '|before_or_equal:' . now()->subYears(18)->toDateString(),
                 'phone' => [
                                 'nullable',

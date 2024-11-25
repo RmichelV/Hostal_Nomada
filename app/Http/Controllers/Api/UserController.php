@@ -48,14 +48,34 @@ class UserController extends Controller
     {
         try {
             $validated = $request->validate([
-                'name' => 'sometimes|required|string|max:255',
-                'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
-                'password' => 'nullable|string|min:8',
+                'name' => 'sometimes|required|string|max:255|regex:/^([A-ZÁÉÍÓÚÑÇĆ][a-záéíóúñçć]+)(\s[A-ZÁÉÍÓÚÑÇĆ][a-záéíóúñçć]+)*$/',
+                'email' => [
+                    'sometimes',
+                    'required',
+                    'regex:/^[\w\.-]+@[\w\.-]+\.(com|net|edu)$/',
+                    'email',
+                    'unique:users,email,' . $user->id],
+                'password' => [
+                    'nullable',
+                    'string',
+                    'min:8'],
                 'country_id' => 'sometimes|required|integer|exists:countries,id',
-                'identification_number' => 'sometimes|required|integer|unique:users,identification_number,' . $user->id,
-                'birthday' => 'sometimes|required|date',
-                'phone' => 'sometimes|required|numeric',
+                'identification_number' => [
+                    'sometimes',
+                    'required',
+                    'integer',
+                    'regex:/^(?:[1-9]\d{3,9})$/',
+                    'unique:users,identification_number,' . $user->id],
+                'birthday' => 'required|date|before:today|after_or_equal:' . now()->subYears(90)->toDateString() . '|before_or_equal:' . now()->subYears(18)->toDateString(),
+                'phone' => [
+                    'nullable',
+                    'string',
+                    'max:15',
+                    'regex:/^\+?[5-9][0-9]{4,8}$/', 
+                ],             
                 'rol_id' => 'sometimes|required|integer|exists:rols,id'
+            ],[
+                'name.regex'=>'no tiene nada'
             ]);
 
             $user->update([
