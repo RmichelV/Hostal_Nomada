@@ -52,10 +52,10 @@ class RoomTypeController extends Controller
     
         // Crear RoomType
         $roomType = new RoomType();
-        $roomType->name = $request->input('name');
+        $roomType->name = ucfirst($request->input('name'));  // Capitalize first letter
         $roomType->quantity = $request->input('quantity');
         $roomType->price = $request->input('price');
-        $roomType->description = $request->input('description');
+        $roomType->description = ucfirst($request->input('description'));
     
         if ($request->hasFile('room_image')) {
             $room_image = $request->file('room_image');
@@ -129,10 +129,10 @@ class RoomTypeController extends Controller
         ]);
 
         // Actualizar RoomType
-        $roomType->name = $request->input('name');
+        $roomType->name = ucfirst($request->input('name'));
         $roomType->quantity = $request->input('quantity');
         $roomType->price = $request->input('price');
-        $roomType->description = $request->input('description');
+        $roomType->description = ucfirst($request->input('description'));
 
         if ($request->hasFile('room_image')) {
             if ($roomType->room_image) {

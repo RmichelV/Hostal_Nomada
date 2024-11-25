@@ -10,7 +10,14 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import InputError from '@/Components/InputError';
 
-export default function Registrar() {
+interface Country {
+    id: number;
+    name: string;
+  }
+  interface RegistrarProps {
+    countries: Country[];
+  }
+export default function Registrar({ countries=[] }: RegistrarProps) {
   const page = useTypedPage();
   const route = useRoute();
   const form = useForm({
@@ -20,7 +27,7 @@ export default function Registrar() {
     password_confirmation: '',
     terms: false,
     country_id: '',
-    rol_id: '',
+    // rol_id: '',
     identification_number: '',
     birthday: '',
     phone: '',
@@ -32,6 +39,8 @@ export default function Registrar() {
       onFinish: () => form.reset('password', 'password_confirmation'),
     });
   }
+
+  // const { countries }: RegistrarProps = page.props;
 
   return (
     <AuthenticationCard>
@@ -99,18 +108,25 @@ export default function Registrar() {
 
         <div className="mt-4">
           <InputLabel htmlFor="country_id">País</InputLabel>
-          <TextInput
+          <select
             id="country_id"
-            type="number"
-            className="mt-1 block w-full"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             value={form.data.country_id}
-            onChange={(e) => form.setData('country_id', e.currentTarget.value)}
+            onChange={(e) => form.setData('country_id', e.target.value)}
             required
-          />
+          >
+            <option value="">Selecciona un país</option>
+            {countries.map((country) => (
+              <option key={country.id} value={country.id}>
+                {country.name}
+              </option>
+            ))}
+          </select>
           <InputError className="mt-2" message={form.errors.country_id} />
         </div>
 
-        <div className="mt-4">
+
+        {/* <div className="mt-4">
           <InputLabel htmlFor="rol_id">Rol</InputLabel>
           <TextInput
             id="rol_id"
@@ -121,7 +137,7 @@ export default function Registrar() {
             required
           />
           <InputError className="mt-2" message={form.errors.rol_id} />
-        </div>
+        </div> */}
 
         <div className="mt-4">
           <InputLabel htmlFor="identification_number">Número de Identificación</InputLabel>

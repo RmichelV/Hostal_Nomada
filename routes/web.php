@@ -34,6 +34,8 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+
 Route::get('/api/roomtypes', [ApiRoomTypeController::class, 'index']);
 Route::get('api/restaurant_dishes', [ApiRestaurantDishController::class, 'index']);
 Route::get('api/supplies', [ApiSupplyController::class, 'index']);
