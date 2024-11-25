@@ -20,14 +20,12 @@ class EmployeeController extends Controller
             ->with(['user:id,name', 'shift:id,name'])
             ->get();
     
-        // Obtener los IDs de usuarios que ya están asignados a empleados activos
         $activeEmployeeUserIds = Employee::where('isDeleted', 0)->pluck('user_id');
     
-        // Obtener todos los usuarios disponibles, sin excluir los usuarios asignados actualmente
         $users = User::where('isDeleted', 0)
             ->where('rol_id', '!=', 3)
             ->whereNotIn('id', $activeEmployeeUserIds)
-            ->orWhereIn('id', $employees->pluck('user_id')) // Incluir los usuarios asignados actualmente
+            // ->orWhereIn('id', $employees->pluck('user_id')) 
             ->get();
     
         $shifts = Shift::all();

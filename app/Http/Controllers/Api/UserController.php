@@ -14,8 +14,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        return User::where('isDeleted', 0)
-            ->with(['country:id,name', 'rol:id,name'])
+        return User::with(['country:id,name', 'rol:id,name'])
             ->get();
     }
 
@@ -85,4 +84,15 @@ class UserController extends Controller
             return response()->json(['error' => 'Error al eliminar el usuario'], 500);
         }
     }
+    public function restore($id)
+    {
+        $user = User::find($id);
+        if ($user) {
+            $user->isDeleted = false;
+            $user->save();
+            return response()->json(['message' => 'Usuario restaurado con éxito'], 200);
+        }
+        return response()->json(['message' => 'Usuario no encontrado'], 404);
+    }
+
 }

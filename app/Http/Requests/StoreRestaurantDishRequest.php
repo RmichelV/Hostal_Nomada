@@ -24,8 +24,13 @@ class StoreRestaurantDishRequest extends FormRequest
         return [
             'dishname' => 'required|string|max:25',
             'description' => 'required|string|max:55',
-            'price' => 'required|numeric|min:1|max:999999.99',
-            // 'dish_image' => 'nullable|string|max:300',
+            'price' => 'required|numeric|between:1,9999.99',
+            'dish_image' => [
+            'nullable',
+            'image', 
+            'mimes:jpeg,png,jpg,gif', 
+            'max:2048',
+        ],
         ];
     }
 }

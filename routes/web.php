@@ -34,6 +34,8 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+
 Route::get('/api/roomtypes', [ApiRoomTypeController::class, 'index']);
 Route::get('api/restaurant_dishes', [ApiRestaurantDishController::class, 'index']);
 Route::get('api/supplies', [ApiSupplyController::class, 'index']);
@@ -59,6 +61,7 @@ Route::middleware([
     Route::post('/api/comments', [CommentController::class, 'store']);
     Route::delete('/api/comments/{id}', [CommentController::class, 'destroy']);
 
+
     Route::get('/forecast', [PythonAnalyticsController::class, 'getForecast']);
     Route::get('/dashboard-data', [DashboardController::class, 'getDashboardData']);
     Route::get('/notifications', function () {
@@ -82,10 +85,14 @@ Route::middleware([
     Route::get('/employee', [EmployeeController::class, 'showEmployeePage'])->name('employee');
     Route::get('/user', [UserController::class, 'showUserPage'])->name('user');
     Route::get('/supply', [SupplyController::class , 'showSupplyPage'])->name('supply');
-    
+    Route::get('/report', [DashboardController::class , 'report'])->name('report');
+    Route::post('/dashboard/report', [DashboardController::class, 'reportpost'])->name('reports.search');
+
     
     Route::apiResource('/api/employees', ApiEmployeeController::class);
     Route::apiResource('/api/users', ApiUserController::class);
+    Route::put('/api/users/{user}/restore', [ApiUserController::class, 'restore']);
+
     Route::apiResource('/api/rooms', ApiRoomController::class);
 
     Route::post('/api/roomtypes', [ApiRoomTypeController::class, 'store']);

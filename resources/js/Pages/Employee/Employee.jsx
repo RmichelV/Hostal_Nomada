@@ -83,7 +83,7 @@ const Employees = ({ employees = [], users = [], shifts = [] }) => {
                     <TableHead>Turno</TableHead>
                     <TableHead className="hidden md:table-cell">Fecha de contratación</TableHead>
                     <TableHead className="hidden sm:table-cell">Salario</TableHead>
-                    <TableHead>Acciones</TableHead>
+                    <TableHead className='text-center'>Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

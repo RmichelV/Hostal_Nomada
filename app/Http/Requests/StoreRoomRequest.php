@@ -23,7 +23,7 @@ class StoreRoomRequest extends FormRequest
     {
         return [
             'room_type_id' => 'required|exists:room_types,id',
-            'name' => 'required|string|max:25|unique:rooms,name',
+            'name' => ['required', 'string', 'max:15', 'regex:/^[a-zA-Z][a-zA-Z0-9]*$/','unique:rooms,name'],
             'status' => 'required|in:Ocupada,Libre,No acceso',
         ];
     }

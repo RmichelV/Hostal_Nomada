@@ -12,26 +12,35 @@ import { Link } from '@inertiajs/react'
 import ReservationForm from './ReservationForm'
 import AppLayout from '@/Layouts/AppLayout'
 
-const ReservationList = ({ reservations = [], users = [], room_types = [], notificaciones=[] }) => {
-  const [reservationListData, setReservationListData] = useState([]);
+const ReservationList = ({ reservations = [], users = [], notificaciones = [] }) => {
+  const [reservationListData, setReservationListData] = useState([])
+  const [roomTypes, setRoomTypes] = useState([]) // Almacena los tipos de habitaciones
   const [selectedReservation, setSelectedReservation] = useState(null)
-  const [modalOpen, setModalOpen] = useState(false)
   const [isFormOpen, setIsFormOpen] = useState(false)
 
+  // Fetch de reservas
   const fetchReservationList = async () => {
     try {
-      const response = await axios.get('/api/reservations');
-      console.log(response.data); // Verifica la estructura de los datos aquí
-      setReservationListData(response.data);
+      const response = await axios.get('/api/reservations')
+      setReservationListData(response.data)
     } catch (error) {
-      console.error("Error recibiendo reservas:", error);
+      console.error("Error recibiendo reservas:", error)
     }
-  };
-  
-  console.log("NOTIFICACIONES: ",notificaciones)
+  }
+
+  // Fetch de tipos de habitaciones
+  const fetchRoomTypes = async () => {
+    try {
+      const response = await axios.get('/api/roomtypes')
+      setRoomTypes(response.data)
+    } catch (error) {
+      console.error("Error obteniendo tipos de habitaciones:", error)
+    }
+  }
 
   useEffect(() => {
     fetchReservationList()
+    fetchRoomTypes() // Carga los tipos de habitaciones al inicio
   }, [])
 
   const handleEdit = (reservation) => {
@@ -64,13 +73,8 @@ const ReservationList = ({ reservations = [], users = [], room_types = [], notif
     })
   }
 
-  const closeModal = () => {
-    setModalOpen(false) // Cierra el modal
-    setSelectedReservation(null)
-  }
-
   const handleFormSubmit = () => {
-    closeModal()
+    setIsFormOpen(false)
     fetchReservationList()
   }
 
@@ -89,7 +93,6 @@ const ReservationList = ({ reservations = [], users = [], room_types = [], notif
               </Button>
             </Link>
             <div className="overflow-x-auto">
-              
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -101,34 +104,27 @@ const ReservationList = ({ reservations = [], users = [], room_types = [], notif
                     <TableHead>Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
-                {/*  */}
-
                 <TableBody>
-                  {Array.isArray(reservationListData) && reservationListData.map((reservation, index) => (
-                    <TableRow key={reservation?.id}>
+                  {reservationListData.map((reservation, index) => (
+                    <TableRow key={reservation.id}>
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell>{reservation?.user.name}</TableCell>
-                      <TableCell>{reservation?.room_types.name}</TableCell>
-                      <TableCell>{reservation?.check_in}</TableCell>
-                      <TableCell>{reservation?.check_out}</TableCell>
+                      <TableCell>{reservation.user.name}</TableCell>
+                      <TableCell>{reservation.room_types?.name || 'N/A'}</TableCell>
+                      <TableCell>{reservation.check_in}</TableCell>
+                      <TableCell>{reservation.check_out}</TableCell>
                       <TableCell>
                         <div className="flex flex-wrap justify-center gap-2">
-                          {reservation?.status === 'En Proceso'||reservation?.status === 'Pendiente' && (
-                            <>
-                              <Button onClick={() => handleEdit(reservation)} size="sm">
-                                <Pencil className="h-4 w-4" />
-                              </Button>
-                              <Button onClick={() => handleDeleteConfirmation(reservation)} size="sm" variant="destructive">
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </>
-                          )}
+                          <Button onClick={() => handleEdit(reservation)} size="sm">
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button onClick={() => handleDeleteConfirmation(reservation)} size="sm" variant="destructive">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
-              {/* ))} */}
               </Table>
             </div>
           </CardContent>
@@ -136,23 +132,18 @@ const ReservationList = ({ reservations = [], users = [], room_types = [], notif
       </div>
 
       {isFormOpen && (
-          <Modal
-            show={isFormOpen}
-            onClose={() => setIsFormOpen(false)}
-          >
-             <ReservationForm 
-            users={users} 
-            roomTypes={room_types} 
-            reservation={selectedReservation} 
-            onFormSubmit={() => {
-                handleFormSubmit()
-                setIsFormOpen(false)
-              }}
+        <Modal
+          show={isFormOpen}
+          onClose={() => setIsFormOpen(false)}
+        >
+          <ReservationForm
+            users={users}
+            rooms={roomTypes} 
+            reservation={selectedReservation}
+            onFormSubmit={handleFormSubmit}
           />
-            
-          </Modal>
-        )}
-
+        </Modal>
+      )}
     </AppLayout>
   )
 }

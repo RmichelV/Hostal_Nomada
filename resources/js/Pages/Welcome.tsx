@@ -11,6 +11,7 @@ interface Props {
   canRegister: boolean;
   laravelVersion: string;
   phpVersion: string;
+  countries: [];
 }
 
 export default function Welcome({
@@ -18,6 +19,7 @@ export default function Welcome({
   canRegister,
   laravelVersion,
   phpVersion,
+  countries
 }: Props) {
   const route = useRoute();
   const page = useTypedPage();
