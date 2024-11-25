@@ -22,7 +22,26 @@ class UpdateEmployeeRequest extends FormRequest
         return [
             'user_id' => 'required|exists:users,id',
             'shift_id' => 'required|exists:shifts,id',
-            'hire_date' => "required|date|after_or_equal:$fortyYearsAgo|before_or_equal:today",
+            'hire_date' => [
+                'required',
+                'date',
+                function ($attribute, $value, $fail) {
+                    $hire_date = Carbon::parse($value);
+                    $today = Carbon::now();
+                    $twentyYearsAgo = Carbon::now()->subYears(20); // Clonamos la fecha para el límite de 20 años atrás
+                    $twoMonthsFromNow = Carbon::now()->addMonths(2); // Clonamos la fecha para el límite de 2 meses en el futuro
+
+                    // Verificar si la fecha de contratación es más antigua de 20 años
+                    if ($hire_date < $twentyYearsAgo) {
+                        $fail('El empleado debe ser contratado en los últimos 20 años.');
+                    }
+                    
+                    // Verificar si la fecha de contratación está más de 2 meses en el futuro
+                    if ($hire_date > $twoMonthsFromNow) {
+                        $fail('La fecha de contratación no puede ser mayor a 2 meses en el futuro.');
+                    }
+                },
+            ],
             'salary' => 'required|numeric|min:2500|max:999999',
             'isDeleted' => 'nullable|boolean',
         ];
