@@ -95,12 +95,12 @@ export default function NavBar({ handleLogout }:any) {
                           className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
                         >
                           Mensaje: {notification.data.message}.
-                          <a
+                          {/* <a
                             href={`/reservas/${notification.data.reserva_id}`}
                             className="text-blue-500 hover:underline"
                           >
                             Ver detalles
-                          </a>
+                          </a> */}
                         </div>
                       ))
                     ) : (

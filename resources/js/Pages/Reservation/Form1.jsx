@@ -101,10 +101,9 @@ export default function ResForm({
                         <SelectContent>
                             <SelectItem value="all">Todos</SelectItem>
                             {habitacionesFiltradas.map(habitacion => (
-                            <div key={habitacion.id}>
-                            <SelectItem value={habitacion.id}>{habitacion.name}</SelectItem>
-
-                            </div> 
+                            // <div key={habitacion.id}>
+                                <SelectItem value={habitacion.name}>{habitacion.name}</SelectItem>
+                            // </div> 
                         ))}
                         </SelectContent>
                     </Select>

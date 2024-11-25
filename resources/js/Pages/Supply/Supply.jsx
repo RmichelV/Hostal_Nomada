@@ -116,7 +116,7 @@ const SuppliesManagement = ({ supplies = [] }) => {
                     <TableHead>Descripción</TableHead>
                     <TableHead>Precio</TableHead>
                     <TableHead>Imagen</TableHead>
-                    <TableHead>Acciones</TableHead>
+                    <TableHead className='text-center'>Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
