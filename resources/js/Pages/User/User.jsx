@@ -16,15 +16,9 @@ const User = ({ users = [], rols = [], countries = [] }) => {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [usersData, setUsersData] = useState(users)
   const [selectedUser, setSelectedUser] = useState(null)
+  const [deletedUsers, setDeletedUsers] = useState([]);
+  const [showDeletedUsers, setShowDeletedUsers] = useState(false);
 
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get('/api/users')
-      setUsersData(response.data)
-    } catch (error) {
-      console.error("Error fetching users:", error)
-    }
-  }
 
   useEffect(() => {
     fetchUsers()
@@ -37,14 +31,19 @@ const User = ({ users = [], rols = [], countries = [] }) => {
 
   const handleDeleteUser = async (id) => {
     try {
-      await axios.delete(`/api/users/${id}`)
-      Swal.fire("¡Éxito!", "Usuario eliminado exitosamente", "success")
-      fetchUsers()
+      await axios.delete(`/api/users/${id}`);
+      Swal.fire("¡Éxito!", "Usuario eliminado exitosamente", "success");
+      setUsersData((prevUsers) => prevUsers.filter((user) => user.id !== id));
+      const deletedUser = usersData.find((user) => user.id === id);
+      if (deletedUser) {
+        setDeletedUsers((prevDeleted) => [...prevDeleted, { ...deletedUser, isDeleted: true }]);
+      }
     } catch (error) {
-      Swal.fire("Error", "No se pudo eliminar el usuario", "error")
+      console.error("Error al eliminar el usuario:", error);
+      Swal.fire("Error", "No se pudo eliminar el usuario", "error");
     }
-  }
-
+  };
+  
   const handleDeleteConfirmation = (user) => {
     Swal.fire({
       title: `¿Estás seguro de eliminar al usuario ${user.name}?`,
@@ -59,6 +58,29 @@ const User = ({ users = [], rols = [], countries = [] }) => {
       }
     })
   }
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get('/api/users');
+      setUsersData(response.data.filter(user => !user.isDeleted));
+      setDeletedUsers(response.data.filter(user => user.isDeleted));
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  const handleRestoreUser = async (id) => {
+    try {
+      await axios.put(`/api/users/${id}/restore`);
+      Swal.fire("¡Éxito!", "Usuario restaurado exitosamente", "success");
+      fetchUsers();
+    } catch (error) {
+      Swal.fire("Error", "No se pudo restaurar el usuario", "error");
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   return (
     <AppLayout>
@@ -69,12 +91,24 @@ const User = ({ users = [], rols = [], countries = [] }) => {
             <CardDescription>Gestiona los usuarios</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => {
-              setSelectedUser(null)
-              setIsFormOpen(true)
-            }} className="mb-4 w-full sm:w-auto">
-              <PlusIcon className="mr-2 h-4 w-4" /> Agregar Nuevo Usuario
-            </Button>
+            <div className="flex justify-between mb-4">
+              <Button
+                onClick={() => {
+                  setSelectedUser(null);
+                  setIsFormOpen(true);
+                }}
+                className="w-full sm:w-auto"
+              >
+                <PlusIcon className="mr-2 h-4 w-4" /> Agregar Nuevo Usuario
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => setShowDeletedUsers(!showDeletedUsers)}
+                className="w-full sm:w-auto"
+              >
+                {showDeletedUsers ? 'Ver Usuarios Activos' : 'Ver Usuarios Eliminados'}
+              </Button>
+            </div>
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
@@ -83,24 +117,40 @@ const User = ({ users = [], rols = [], countries = [] }) => {
                     <TableHead>Nombre</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Rol</TableHead>
-                    <TableHead>Acciones</TableHead>
+                    <TableHead className='text-center'>Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {usersData.map((user, index) => (
+                  {(showDeletedUsers ? deletedUsers : usersData).map((user, index) => (
                     <TableRow key={user.id}>
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>{user.name}</TableCell>
                       <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.rol.name}</TableCell>
+                      <TableCell>{user.rol?.name}</TableCell>
                       <TableCell>
                         <div className="flex flex-wrap justify-center gap-2">
-                          <Button onClick={() => handleEdit(user)} size="sm">
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button onClick={() => handleDeleteConfirmation(user)} size="sm" variant="destructive">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          {!showDeletedUsers ? (
+                            <>
+                              <Button onClick={() => handleEdit(user)} size="sm">
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                onClick={() => handleDeleteConfirmation(user)}
+                                size="sm"
+                                variant="destructive"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </>
+                          ) : (
+                            <Button
+                              onClick={() => handleRestoreUser(user.id)}
+                              size="sm"
+                              variant="secondary"
+                            >
+                              Restaurar
+                            </Button>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>
@@ -121,15 +171,16 @@ const User = ({ users = [], rols = [], countries = [] }) => {
               countries={countries}
               user={selectedUser}
               onFormSubmit={() => {
-                fetchUsers()
-                setIsFormOpen(false)
+                fetchUsers();
+                setIsFormOpen(false);
               }}
             />
           </Modal>
         )}
       </div>
     </AppLayout>
-  )
+  );
+
 }
 
 export default User

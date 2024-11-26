@@ -128,6 +128,7 @@ const Rooms = ({ rooms = [], roomTypes = [] }) => {
           <Modal
             show={isFormOpen}
             onClose={() => setIsFormOpen(false)}
+            
           >
             <RoomForm
               roomTypes={roomTypes}
@@ -135,6 +136,10 @@ const Rooms = ({ rooms = [], roomTypes = [] }) => {
               onFormSubmit={() => {
                 fetchRooms()
                 setIsFormOpen(false)
+              }}
+              onCancel={() => {
+                setIsFormOpen(false)
+                setSelectedRoom(null)
               }}
             />
           </Modal>

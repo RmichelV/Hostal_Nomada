@@ -8,18 +8,18 @@ import { LineChart as LineChartIcon, BarChart as BarChartIcon, PieChart as PieCh
 
 export default function DashContent() {
   const salesData = [
-    { name: 'Jan', sales: 4000, cost: 2400 },
-    { name: 'Feb', sales: 3000, cost: 1398 },
-    { name: 'Mar', sales: 2000, cost: 9800 },
-    { name: 'Apr', sales: 2780, cost: 3908 },
-    { name: 'May', sales: 1890, cost: 4800 },
-    { name: 'Jun', sales: 2390, cost: 3800 },
-    { name: 'Jul', sales: 3490, cost: 4300 },
+    { name: 'Ene', empleados: 10, usuarios: 30 },
+    { name: 'Feb', empleados: 15, usuarios: 25 },
+    { name: 'Mar', empleados: 18, usuarios: 30 },
+    { name: 'Abr', empleados: 20, usuarios: 45 },
+    { name: 'May', empleados: 7, usuarios: 30 },
+    { name: 'Jun', empleados: 10, usuarios: 25 },
+    { name: 'Jul', empleados: 9, usuarios: 15 },
   ]
 
   const earningsData = [
-    { name: 'Pension', value: 251 },
-    { name: 'Accesorios', value: 176 },
+    { name: 'Personal', value: 251 },
+    { name: 'Externa', value: 176 },
   ]
 
   const roomsData = [
@@ -156,10 +156,10 @@ useEffect(() => {
           <Card className="p-6">
             <div className="flex justify-between items-center mb-4">
               <div>
-                <div className="text-lg font-bold">Bs.855.8k</div>
-                <div className="text-sm text-gray-500">Gross Sales</div>
+                <div className="text-lg font-bold">58</div>
+                <div className="text-sm text-gray-500">Usuarios Registrados</div>
               </div>
-              <Select defaultValue="this-week">
+              {/* <Select defaultValue="this-week">
                 <SelectTrigger className="w-32">
                   <SelectValue placeholder="Select period" />
                 </SelectTrigger>
@@ -168,7 +168,7 @@ useEffect(() => {
                   <SelectItem value="last-week">Last Week</SelectItem>
                   <SelectItem value="this-month">This Month</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select> */}
             </div>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={salesData}>
@@ -177,8 +177,8 @@ useEffect(() => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="sales" stroke="#8884d8" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="cost" stroke="#82ca9d" />
+                <Line type="monotone" dataKey="empleados" stroke="#8884d8" activeDot={{ r: 8 }} />
+                <Line type="monotone" dataKey="usuarios" stroke="#82ca9d" />
               </LineChart>
             </ResponsiveContainer>
           </Card>
@@ -190,7 +190,7 @@ useEffect(() => {
           <Card className="p-6">
             <div className="flex justify-between items-center mb-4">
               <div className="text-lg font-bold">Habitaciones Reservadas</div>
-              <Select defaultValue="esta-semana">
+              {/* <Select defaultValue="esta-semana">
                 <SelectTrigger className="w-32">
                   <SelectValue placeholder="Select period" />
                 </SelectTrigger>
@@ -199,7 +199,7 @@ useEffect(() => {
                   <SelectItem value="semana-pasada">Semana Pasada</SelectItem>
                   <SelectItem value="este-mes">Este Mes</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select> */}
             </div>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={roomsData}>
@@ -214,8 +214,8 @@ useEffect(() => {
         {/* Earnings Chart */}
         <Card className="p-6">
             <div className="flex justify-between items-center mb-4">
-              <div className="text-lg font-bold">Earnings</div>
-              <Select defaultValue="this-week">
+              <div className="text-lg font-bold">Formato de Reservaciones</div>
+              {/* <Select defaultValue="this-week">
                 <SelectTrigger className="w-32">
                   <SelectValue placeholder="Select period" />
                 </SelectTrigger>
@@ -224,7 +224,7 @@ useEffect(() => {
                   <SelectItem value="last-week">Last Week</SelectItem>
                   <SelectItem value="this-month">This Month</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select> */}
             </div>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -247,19 +247,10 @@ useEffect(() => {
             </ResponsiveContainer>
           </Card>
           {/* Linear Regression Chart */}
-          <Card className="p-6">
+          {/* <Card className="p-6">
             <div className="flex justify-between items-center mb-4">
               <div className="text-lg font-bold">Análisis de Regresión</div>
-              {/* <Select defaultValue="this-week">
-                <SelectTrigger className="w-32">
-                  <SelectValue placeholder="Select period" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="this-week">This Week</SelectItem>
-                  <SelectItem value="last-week">Last Week</SelectItem>
-                  <SelectItem value="this-month">This Month</SelectItem>
-                </SelectContent>
-              </Select> */}
+
             </div>
             <ResponsiveContainer width="100%" height={300}>
     <ScatterChart>
@@ -279,7 +270,7 @@ useEffect(() => {
       />
       <Tooltip cursor={{ strokeDasharray: '3 3' }} />
       
-      {/* Puntos de dispersión */}
+      {/* Puntos de dispersión
       <Scatter
         name="Datos"
         data={regressionDataWithLine}
@@ -288,7 +279,6 @@ useEffect(() => {
         size={8} // Tamaño de los puntos
       />
       
-      {/* Línea de regresión */}
       <Line
         type="monotone"
         dataKey="yRegression"
@@ -299,7 +289,7 @@ useEffect(() => {
       />
     </ScatterChart>
   </ResponsiveContainer>
-          </Card>
+          </Card> */}
         </div>
       </div>
     // </div>

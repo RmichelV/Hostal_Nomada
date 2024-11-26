@@ -100,10 +100,11 @@ export default function ResForm({
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">Todos</SelectItem>
-                            <SelectItem value="matrimonial">Matrimonial</SelectItem>
-                            <SelectItem value="simple">Simple</SelectItem>
-                            <SelectItem value="doble">Doble</SelectItem>
-                            <SelectItem value="suite">Suite</SelectItem>
+                            {habitacionesFiltradas.map(habitacion => (
+                            // <div key={habitacion.id}>
+                                <SelectItem value={habitacion.name}>{habitacion.name}</SelectItem>
+                            // </div> 
+                        ))}
                         </SelectContent>
                     </Select>
                 </div>

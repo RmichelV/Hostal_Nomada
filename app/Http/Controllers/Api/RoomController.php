@@ -26,9 +26,9 @@ class RoomController extends Controller
     {
         // Validación de los datos
         $validated = $request->validate([
-            'room_type_id' => 'required|exists:room_types,id', // Verifica que el tipo de habitación exista
-            'name' => 'required|string|max:25|unique:rooms,name,' . $room->id, // Asegura que el nombre sea único, excepto el actual
-            'status' => 'required|in:Ocupada,Libre,No acceso', // Valida el estado de la habitación
+            'room_type_id' => ['required', 'integer', 'exists:room_types,id'],
+            'name' => ['required', 'string', 'max:15', 'regex:/^[a-zA-Z][a-zA-Z0-9]*$/','unique:rooms,name,' . $room->id],
+            'status' => 'required|in:Ocupada,Libre,No acceso',
         ]);
         $validated['name'] = ucwords(strtolower($validated['name'])); 
 

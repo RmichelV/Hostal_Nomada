@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LayoutDashboard, Menu, X,Users,Salad,SquareUserRound,BedDouble,DoorOpen,HandPlatter   } from 'lucide-react';
+import { LayoutDashboard, Menu, X,Users,Salad,SquareUserRound,BedDouble,DoorOpen,HandPlatter ,BookOpenText  } from 'lucide-react';
 import NavLink from '@/Components/NavLink';
 import { Button } from '@/Components/ui/button';
 // import '../../css/app.css';
@@ -10,6 +10,7 @@ const Sidebar = ({ head }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navItems = [
     { icon: LayoutDashboard, text: 'Panel de Control', route: 'dashboard' },
+    { icon: BookOpenText, text: 'Reportes', route: 'report' },
     { icon: SquareUserRound, text: 'Usuarios', route: 'user' },
     { icon: Users, text: 'Empleados', route: 'employee' },
     { icon: DoorOpen, text: 'Tipos de Habitaciones', route: 'room_type' },
@@ -18,7 +19,6 @@ const Sidebar = ({ head }) => {
     { icon: HandPlatter , text: 'Insumos', route: 'supply' },
     
   ];
-
   return (
     <>
       <Button

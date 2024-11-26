@@ -19,8 +19,8 @@ class UpdateRoomRequest extends FormRequest
         $roomId = $this->route('room'); 
 
         return [
-            'room_type_id' => 'required|exists:room_types,id',
-            'name' => 'required|string|max:25|unique:rooms,name,' . $roomId,
+            'room_type_id' => ['required', 'integer', 'exists:room_types,id'],
+            'name' => ['required', 'string', 'max:15', 'regex:/^[a-zA-Z0-9]+$/','unique:rooms,name,' . $roomId],
             'status' => 'required|in:Ocupada,Libre,No acceso',
         ];
     }

@@ -182,10 +182,11 @@ const RoomTypeForm = ({ roomType = {}, onFormSubmit }) => {
   
 
   return (
-    <div className="p-4">
+    <div className="p-6 overflow-hidden">
       <h1 className="text-2xl font-bold mb-4">Gestión de Tipos de Habitación</h1>
+      <div className="overflow-y-auto max-h-[80vh]">
       <form onSubmit={handleSubmit}>
-        <div className="space-y-1">
+        <div className="space-y-1 ">
           <Label>Nombre</Label>
           <Input
             value={formData.name}
@@ -256,9 +257,9 @@ const RoomTypeForm = ({ roomType = {}, onFormSubmit }) => {
                 </div>
             </TableCell>
             <TableCell>
-                <Button type="button" variant="destructive" onClick={() => handleRemoveSupply(index)}>
+                {/* <Button type="button" variant="destructive" onClick={() => handleRemoveSupply(index)}>
                     Eliminar
-                </Button>
+                </Button> */}
             </TableCell>
         </TableRow>
     ))}
@@ -271,7 +272,7 @@ const RoomTypeForm = ({ roomType = {}, onFormSubmit }) => {
           {loading ? 'Guardando...' : roomType?.id ? 'Actualizar' : 'Crear'}
         </Button>
       </form>
-    </div>
+    </div></div>
   );
 };
 
