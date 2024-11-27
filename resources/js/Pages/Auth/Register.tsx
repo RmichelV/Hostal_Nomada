@@ -33,6 +33,25 @@ export default function Registrar({ countries=[] }: RegistrarProps) {
     phone: '',
   });
 
+  //funcion para los campos de numeros :33 
+
+  const limitarNumeros = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const input = event.currentTarget;
+    const value = input.value;
+  
+    // Bloquear letras (e, E), signos (+, -, .) y limitar a 10 dígitos
+    if (
+      event.key === 'e' || 
+      event.key === 'E' || 
+      event.key === '+' || 
+      event.key === '-' || 
+      event.key === '.' || 
+      (/\d/.test(event.key) && value.replace(/\D/g, '').length >= 10) // Evitar más de 10 dígitos
+    ) {
+      event.preventDefault();
+    }
+  };
+
   function onSubmit(e: any) {
     e.preventDefault();
     form.post(route('register'), {
@@ -147,6 +166,7 @@ export default function Registrar({ countries=[] }: RegistrarProps) {
             className="mt-1 block w-full"
             value={form.data.identification_number}
             onChange={(e) => form.setData('identification_number', e.currentTarget.value)}
+            onKeyDown={limitarNumeros}
             required
           />
           <InputError
@@ -163,6 +183,17 @@ export default function Registrar({ countries=[] }: RegistrarProps) {
             className="mt-1 block w-full"
             value={form.data.birthday}
             onChange={(e) => form.setData('birthday', e.currentTarget.value)}
+            // con esto evitamos que se escriba el año en más de 4 digitos :33  
+            onInput={(e) => {
+              const inputValue = e.currentTarget.value;
+              const [year, month, day] = inputValue.split('-');
+              
+              if (year && year.length > 4) {
+                const correctedYear = year.slice(0, 4);
+                e.currentTarget.value = `${correctedYear}-${month || ''}-${day || ''}`;
+                form.setData('birthday', e.currentTarget.value);
+              }
+            }}
             required
           />
           <InputError className="mt-2" message={form.errors.birthday} />
@@ -175,7 +206,25 @@ export default function Registrar({ countries=[] }: RegistrarProps) {
             type="text"
             className="mt-1 block w-full"
             value={form.data.phone}
-            onChange={(e) => form.setData('phone', e.currentTarget.value)}
+            onChange={(e) => {
+              const value = e.currentTarget.value;
+              // Permitir solo dígitos y un único "+" al inicio
+              const sanitizedValue = value.replace(/[^+\d]/g, '').replace(/^(.+?)\+/g, '$1'); 
+              form.setData('phone', sanitizedValue);
+            }}
+            onKeyDown={(e) => {
+              const input = e.currentTarget;
+              const value = input.value;
+              limitarNumeros
+              if (
+                (e.key === '+' && e.currentTarget.value.includes('+') && e.currentTarget.selectionStart !== 0)||
+                (/\d/.test(e.key) && value.replace(/\D/g, '').length >= 10) // Evitar más de 10 dígitos
+              ) {
+                e.preventDefault();
+              }
+              
+            }}
+
           />
           <InputError className="mt-2" message={form.errors.phone} />
         </div>
