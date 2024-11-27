@@ -155,9 +155,9 @@ console.info(page.props.auth.user?.profile_photo_path? 'hay '+page.props.auth.us
                           className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
                         >
                           Mensaje: {notification.data.message}.
-                          <a href={`/reservas/${notification.data.reserva_id}`} className="text-blue-500 hover:underline">
+                          {/* <a href={`/reservas/${notification.data.reserva_id}`} className="text-blue-500 hover:underline">
                             Ver detalles
-                          </a>
+                          </a> */}
                         </div>
                       ))
                     ) : (
@@ -197,9 +197,9 @@ console.info(page.props.auth.user?.profile_photo_path? 'hay '+page.props.auth.us
                   )}
                 >
                   <DropdownLink href={route('profile.show')}>Perfil</DropdownLink>
-                  <form onSubmit={handleLogout}>
-                    <DropdownLink as="button">Cerrar sesión</DropdownLink>
-                  </form>
+                  <button onClick={handleLogout}>
+                    <DropdownLink as="button" >Cerrar sesión</DropdownLink>
+                  </button>
                 </Dropdown>
               </div>
 
@@ -319,9 +319,12 @@ console.info(page.props.auth.user?.profile_photo_path? 'hay '+page.props.auth.us
                 ) : null} */}
 
                 {/* <!-- Autenticación --> */}
-                <form method="POST" onSubmit={handleLogout}>
-                  <ResponsiveNavLink as="button">Cerrar sesión</ResponsiveNavLink>
-                </form>
+                <button onClick={handleLogout}>
+                <ResponsiveNavLink as="button">Cerrar sesión</ResponsiveNavLink>
+                </button>
+                {/* <ResponsiveNavLink onClick={handleLogout} as="button">
+                            Cerrar Sesión
+                </ResponsiveNavLink> */}
 
               </div>
             </div>
