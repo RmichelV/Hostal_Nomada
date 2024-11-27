@@ -40,6 +40,75 @@ const UserForm = ({  rols,countries, user, onFormSubmit }) => {
     setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
   };
 
+  //valores del onchage de los inputs 
+  const nombre = (e) => {
+    const value = e.currentTarget.value;
+    
+    // Permitir solo letras (mayúsculas y minúsculas) y espacios en blanco
+    if (/^[a-zA-Z\s]*$/.test(value)) {
+      setFormData(prevData => ({ ...prevData, name: value }));
+    }
+  };
+  //valores para identification number
+  const manejarKeyDown = (e) => {
+    // Prevenir que se ingrese 'e', signos de operación y cualquier otro carácter no numérico
+    const invalidKeys = ['e', 'E', '+', '-', '*', '/', '.', ','];
+    if (invalidKeys.includes(e.key)) {
+      e.preventDefault(); // Prevenir que se ingrese el carácter no permitido
+    }
+  };
+
+  const manejarChange = (e) => {
+      let value = e.currentTarget.value;
+    
+      // Eliminar caracteres no numéricos (esto incluye signos de operadores y la letra 'e')
+      value = value.replace(/[^0-9]/g, '');
+    
+      // Limitar a 10 dígitos
+      if (value.length <= 10) {
+        setFormData(prevData => ({ ...prevData, identification_number: value })); 
+      }
+  };
+
+  //año 
+  const year = (e)=>{
+    const year = (e) => {
+      const inputValue = e.currentTarget.value;
+      const [year, month, day] = inputValue.split('-');
+    
+      if (year && year.length > 4) {
+        const correctedYear = year.slice(0, 4);
+        e.currentTarget.value = `${correctedYear}-${month || ''}-${day || ''}`;
+        setFormData(prevData => ({ ...prevData, birthday: e.currentTarget.value })); // Actualiza el estado correctamente
+      }
+    };
+  }
+
+
+  //telefono 
+  const manejarKeyDownT = (e) => {
+    const input = e.currentTarget;
+    const value = input.value;
+  
+    // Prevenir más de un signo '+' al inicio y limitar a 10 dígitos
+    if (
+      (e.key === '+' && value.includes('+') && input.selectionStart !== 0) ||
+      (/\d/.test(e.key) && value.replace(/\D/g, '').length >= 10)
+    ) {
+      e.preventDefault();
+    }
+  };
+  
+  const manejarChangeT = (e) => {
+    const value = e.currentTarget.value;
+    
+    // Permitir solo dígitos y un único "+" al inicio
+    const sanitizedValue = value.replace(/[^+\d]/g, '').replace(/^(.+?)\+/g, '$1');
+    
+    setFormData(prevData => ({ ...prevData, phone: sanitizedValue })); // Actualiza el estado correctamente
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -67,7 +136,7 @@ const UserForm = ({  rols,countries, user, onFormSubmit }) => {
     setLoading(false);
   };
 
-  const renderInputField = (label, id, type = 'text', required = true) => (
+  const renderInputField = (label, id, type = 'text', required = true, onChange,onKeyDown,onInput) => (
     <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 items-center">
       <Label htmlFor={id} className="text-right">{label}</Label>
       <Input
@@ -75,7 +144,9 @@ const UserForm = ({  rols,countries, user, onFormSubmit }) => {
         type={type}
         name={id}
         value={formData[id]}
-        onChange={(e) => handleChange(id, e.target.value)}
+        onChange={onChange || ((e) => handleChange(e.target.name, e.target.value))}
+        onKeyDown={onKeyDown}
+        onInput={onInput}
         className="w-full"
       />
       {errors[id] && <p className="text-red-500 text-sm">{errors[id]}</p>}
@@ -101,14 +172,14 @@ const UserForm = ({  rols,countries, user, onFormSubmit }) => {
   );
 
   return (
-    <div className="p-6 flex flex-col max-w-lg mx-auto">
+    <div className="p-6 flex flex-col max-w-lg mx-auto overflow-y-auto max-h-[500px]">
       <h1 className="text-2xl font-bold mb-6 text-center">{user ? 'Editar usuario' : 'Agregar nuevo usuario'}</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
-        {renderInputField('Nombre', 'name')}
+        {renderInputField('Nombre', 'name',Text,true,nombre)}
         {renderInputField('Correo Electrónico', 'email', 'email')}
-        {renderInputField('Número de Identificación', 'identification_number', 'number')}
-        {renderInputField('Fecha de Nacimiento', 'birthday', 'date', false)}
-        {renderInputField('Teléfono', 'phone', 'tel', false)}
+        {renderInputField('Número de Identificación', 'identification_number', 'number',true,manejarChange, manejarKeyDown)}
+        {renderInputField('Fecha de Nacimiento', 'birthday', 'date', false,'','',year)}
+        {renderInputField('Teléfono', 'phone', 'tel', false,manejarChangeT,manejarKeyDownT)}
         {renderSelectField('País', 'country_id', countries)}
         {renderSelectField('Rol', 'rol_id', rols)}
         {user ? (
@@ -119,7 +190,7 @@ const UserForm = ({  rols,countries, user, onFormSubmit }) => {
         ) : (
           <>
             {renderInputField('Contraseña', 'password', 'password')}
-            {renderInputField('Confirmar Contraseña', 'password_confirmation', 'password_confirmation')}
+            {renderInputField('Confirmar Contraseña', 'password_confirmation', 'password')}
           </>
         )}
 
