@@ -85,9 +85,8 @@ const EmployeeForm = ({ users, shifts, employee, onFormSubmit }) => {
         id={id}
         type={type}
         name={id}
-        value={formData[id]}  // Asegúrate de que el value sea formData[id]
-        // onChange={(e) => handleChange(id, e.target.value)}
-        onChange={onChange}
+        value={formData[id]}
+        onChange={onChange || ((e) => handleChange(e.target.name, e.target.value))}
         onKeyDown={onKeyDown}
         required={required}
         className="w-full"
@@ -120,7 +119,7 @@ const EmployeeForm = ({ users, shifts, employee, onFormSubmit }) => {
       <form onSubmit={handleSubmit} className="space-y-6">
         {renderSelectField('Usuario', 'user_id', users)}
         {renderSelectField('Turno', 'shift_id', shifts)}
-        {renderInputField('Fecha de Contratación', 'hire_date', 'date')}
+        {renderInputField('Fecha de Contratación', 'hire_date', 'date',true,)}
         {renderInputField('Salario', 'salary', 'number',true,salarioOnChage,salarioOnkeyDown)}
 
         <Button type="submit" className="mt-6 w-full sm:w-auto" disabled={loading}>

@@ -126,11 +126,15 @@ const RoomTypes = ({ roomTypes = [] }) => {
       <TableCell className="hidden sm:table-cell">{roomType?.price}</TableCell>
       <TableCell>
           <img
-            src={roomType?.room_image ? `${roomType?.room_image}`: "/img/noimage.jpeg" } 
+          src={
+            roomType?.room_image
+              ? `/img/room_images/${roomType.room_image}`
+              : "/img/noimage.jpeg"
+          }
             alt={roomType?.name}
             className="w-16 h-16 object-cover"
           />
-       
+      
       </TableCell>
       <TableCell>
         <div className="flex flex-wrap justify-center gap-2">

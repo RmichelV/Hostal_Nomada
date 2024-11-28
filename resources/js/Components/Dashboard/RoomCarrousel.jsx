@@ -41,11 +41,12 @@ export default function RoomCarousel() {
           <Card key={room.id} className="flex-shrink-0 w-full sm:w-1/3">
             <CardContent className="p-4">
               <div className="aspect-video mb-4 content-center">
-                <img
-                  src={room.room_image || '/img/noimage.jpeg?height=200&width=300'}
-                  alt={room.name}
-                  className="w-80 h-40 content-center object-cover rounded-md"
-                />
+              <img
+                src={room.room_image ? `/img/room_images/${room.room_image}` : '/img/noimage.jpeg?height=200&width=300'}
+                alt={room.name || 'Room image'}
+                height={200}
+                width={300}
+              />
               </div>
               <h3 className="text-lg font-bold mb-2">{room.name}</h3>
               <p className="text-sm text-gray-600 mb-2">{room.description}</p>

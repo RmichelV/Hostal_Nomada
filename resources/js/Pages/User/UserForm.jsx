@@ -101,11 +101,18 @@ const UserForm = ({  rols,countries, user, onFormSubmit }) => {
   
   const manejarChangeT = (e) => {
     const value = e.currentTarget.value;
-    
+  
     // Permitir solo dígitos y un único "+" al inicio
-    const sanitizedValue = value.replace(/[^+\d]/g, '').replace(/^(.+?)\+/g, '$1');
-    
-    setFormData(prevData => ({ ...prevData, phone: sanitizedValue })); // Actualiza el estado correctamente
+    const sanitizedValue = value
+      .replace(/[^+\d]/g, '') // Elimina caracteres no numéricos excepto "+"
+      .replace(/^(.+?)\+/g, '$1'); // Permite solo un "+" al inicio
+  
+    // Validar que el número no contenga secuencias de solo ceros
+    if (/^0+$/.test(sanitizedValue.replace(/\D/g, ''))) {
+      setFormData(prevData => ({ ...prevData, phone: '' })); // Si es inválido, lo limpiamos
+    } else {
+      setFormData(prevData => ({ ...prevData, phone: sanitizedValue })); // Actualiza el estado
+    }
   };
 
 

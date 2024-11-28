@@ -61,7 +61,8 @@ class RoomTypeController extends Controller
             $room_image = $request->file('room_image');
             $nombreImagen = $roomType->name . "." . $room_image->extension();
             $ruta = $room_image->storeAs('room_images', $nombreImagen, 'public');
-            $roomType->room_image = Storage::url($ruta);
+            // $roomType->room_image = Storage::url($ruta);
+            $roomType->room_image = $nombreImagen;
         }
     
         $roomType->save();
