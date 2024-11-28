@@ -271,7 +271,7 @@ const RoomTypeForm = ({ roomType = {}, onFormSubmit }) => {
         <div className="mt-6">
           <h2 className="text-xl font-bold">Suministros</h2>
           <div className="flex space-x-4">
-            <Input
+            {/* <Input
               value={newSupply.name}
               onChange={(e) => setNewSupply(prev => ({ ...prev, name: e.target.value }))}
               onKeyPress={(e) => {
@@ -311,7 +311,7 @@ const RoomTypeForm = ({ roomType = {}, onFormSubmit }) => {
                     e.preventDefault(); // Evita caracteres no deseados
                   }
                 }}
-              />
+              /> */}
           </div>
 
           <Table className="mt-2">
