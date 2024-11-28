@@ -26,6 +26,30 @@ const EmployeeForm = ({ users, shifts, employee, onFormSubmit }) => {
     }
   }, [employee])
 
+  const salarioOnChage = (e) => {
+    let value = e.target.value;  // No cambies esta variable directamente, la modificarás más abajo.
+    if (/^\d*\.?\d*$/.test(value)) {
+      if (value !== "" && value.startsWith("0")) {
+        value = value.replace(/^0+/, ""); // Elimina ceros iniciales
+      }
+      const numericValue = parseFloat(value) || 0; // Convierte el valor a número (maneja vacío como 0)
+      if (numericValue >= 0 && numericValue <= 25000) {
+        handleChange('salary', value);  // Actualiza el estado con el nuevo valor
+      }
+    }
+  };
+  const salarioOnkeyDown = (e)=>{
+    if (
+      e.key === 'e' || 
+      e.key === 'E' || 
+      e.key === '+' || 
+      e.key === '-' || 
+      (!/^\d$/.test(e.key) && e.key !== '.' && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')
+    ) {
+      e.preventDefault();
+    }
+  }
+
   const handleChange = (name, value) => {
     setFormData(prevData => ({ ...prevData, [name]: value }))
     setErrors(prevErrors => ({ ...prevErrors, [name]: '' }))
@@ -54,7 +78,7 @@ const EmployeeForm = ({ users, shifts, employee, onFormSubmit }) => {
     setLoading(false)
   }
 
-  const renderInputField = (label, id, type = 'text', required = true) => (
+  const renderInputField = (label, id, type = 'text', required = true, onChange, onKeyDown) => (
     <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 items-center">
       <Label htmlFor={id} className="text-right">{label}</Label>
       <Input
@@ -62,7 +86,9 @@ const EmployeeForm = ({ users, shifts, employee, onFormSubmit }) => {
         type={type}
         name={id}
         value={formData[id]}  // Asegúrate de que el value sea formData[id]
-        onChange={(e) => handleChange(id, e.target.value)}
+        // onChange={(e) => handleChange(id, e.target.value)}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
         required={required}
         className="w-full"
       />
@@ -95,7 +121,7 @@ const EmployeeForm = ({ users, shifts, employee, onFormSubmit }) => {
         {renderSelectField('Usuario', 'user_id', users)}
         {renderSelectField('Turno', 'shift_id', shifts)}
         {renderInputField('Fecha de Contratación', 'hire_date', 'date')}
-        {renderInputField('Salario', 'salary', 'number')}
+        {renderInputField('Salario', 'salary', 'number',true,salarioOnChage,salarioOnkeyDown)}
 
         <Button type="submit" className="mt-6 w-full sm:w-auto" disabled={loading}>
           {employee ? 'Actualizar' : 'Agregar'}
