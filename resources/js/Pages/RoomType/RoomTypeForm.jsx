@@ -192,20 +192,71 @@ const RoomTypeForm = ({ roomType = {}, onFormSubmit }) => {
             value={formData.name}
             onChange={(e) => handleInputChange('name', e.target.value)}
             placeholder="Nombre del tipo de habitación"
+            onKeyPress={(e) => {
+              const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/;
+              if (!regex.test(e.key)) {
+                e.preventDefault();
+              }
+            }}
           />
           <Label>Cantidad</Label>
           <Input
             value={formData.quantity}
-            onChange={(e) => handleInputChange('quantity', e.target.value)}
-            type="number"
+            onChange={(e) => {
+              let value = e.target.value;
+              if (/^\d*$/.test(value)) { // Permite solo números
+                // Evitar múltiples ceros al inicio
+                if (value !== "" && value.startsWith("0")) {
+                  value = value.replace(/^0+/, ""); // Elimina ceros iniciales
+                }
+                const numericValue = parseInt(value, 10); // Convierte a número entero
+                if ((numericValue >= 0 && numericValue <= 25) || value === "") {
+                  handleInputChange('quantity', value); // Actualiza el estado si está dentro del rango o vacío
+                }
+              }
+            }}
+            type="text" // Usa "text" para evitar comportamientos no deseados de "number"
             placeholder="Cantidad"
+            onKeyDown={(e) => {
+              if (
+                e.key === 'e' || 
+                e.key === 'E' || 
+                e.key === '+' || 
+                e.key === '-' || 
+                e.key === '.'
+              ) {
+                e.preventDefault(); // Bloquea caracteres no deseados
+              }
+            }}
           />
           <Label>Precio</Label>
           <Input
             value={formData.price}
-            onChange={(e) => handleInputChange('price', e.target.value)}
-            type="number"
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^\d*\.?\d*$/.test(value)) {
+                if (value !== "" && value.startsWith("0")) {
+                  value = value.replace(/^0+/, ""); // Elimina ceros iniciales
+                } // Permite números con un punto decimal
+                const numericValue = parseFloat(value) || 0; // Convierte el valor a número (maneja vacío como 0)
+                if (numericValue >= 0 && numericValue <= 2500) {
+                  handleInputChange('price', value);
+                }
+              }
+            }}
+            type="text"
             placeholder="Precio"
+            onKeyDown={(e) => {
+              if (
+                e.key === 'e' || 
+                e.key === 'E' || 
+                e.key === '+' || 
+                e.key === '-' || 
+                (!/^\d$/.test(e.key) && e.key !== '.' && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')
+              ) {
+                e.preventDefault();
+              }
+            }}
           />
           <Label>Descripción</Label>
           <Input
@@ -223,14 +274,44 @@ const RoomTypeForm = ({ roomType = {}, onFormSubmit }) => {
             <Input
               value={newSupply.name}
               onChange={(e) => setNewSupply(prev => ({ ...prev, name: e.target.value }))}
+              onKeyPress={(e) => {
+                const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/;
+                if (!regex.test(e.key)) {
+                  e.preventDefault();
+                }
+              }}
               placeholder="Nombre del suministro"
             />
             <Input
-              value={newSupply.quantity}
-              onChange={(e) => setNewSupply(prev => ({ ...prev, quantity: e.target.value }))}
-              type="number"
-              placeholder="Cantidad"
-            />
+                value={newSupply.quantity}
+                onChange={(e) => {
+                  let value = e.target.value;
+                  if (/^\d*$/.test(value)) { // Permite solo números
+                    // Elimina ceros iniciales
+                    if (value !== "" && value.startsWith("0")) {
+                      value = value.replace(/^0+/, ""); // Sustituye múltiples ceros iniciales por un solo "0"
+                    }
+                    const numericValue = parseInt(value, 10); // Convierte a número entero
+                    if ((numericValue >= 0 && numericValue <= 25) || value === "") {
+                      setNewSupply((prev) => ({ ...prev, quantity: value })); // Actualiza el estado
+                    }
+                  }
+                }}
+                type="text" // Usa "text" para evitar comportamientos no deseados de "number"
+                placeholder="Cantidad"
+                onKeyDown={(e) => {
+                  if (
+                    e.key === 'e' || 
+                    e.key === 'E' || 
+                    e.key === '+' || 
+                    e.key === '-' || 
+                    e.key === '.' || 
+                    e.key === ' ' // Bloquea espacio
+                  ) {
+                    e.preventDefault(); // Evita caracteres no deseados
+                  }
+                }}
+              />
           </div>
 
           <Table className="mt-2">
@@ -238,7 +319,7 @@ const RoomTypeForm = ({ roomType = {}, onFormSubmit }) => {
               <TableRow>
                 <TableHead>Nombre</TableHead>
                 <TableHead>Cantidad</TableHead>
-                <TableHead>Acciones</TableHead>
+                {/* <TableHead>Acciones</TableHead> */}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -247,15 +328,23 @@ const RoomTypeForm = ({ roomType = {}, onFormSubmit }) => {
             <TableCell>{supply.name}</TableCell>
             <TableCell>
                 <div className="flex items-center space-x-2">
-                    <Button type="button" onClick={() => ajustarCantidad(index, -1)}>
-                        <MinusIcon className="h-4 w-4" />
-                    </Button>
-                    <span>{supply.quantity || 0}</span>
-                    <Button type="button" onClick={() => ajustarCantidad(index, 1)}>
-                        <PlusIcon className="h-4 w-4" />
-                    </Button>
+                  <Button 
+                    type="button" 
+                    onClick={() => ajustarCantidad(index, -1)} 
+                    disabled={supply.quantity <= 0} // Deshabilita si la cantidad es 0 o menor
+                  >
+                    <MinusIcon className="h-4 w-4" />
+                  </Button>
+                  <span>{supply.quantity || 0}</span>
+                  <Button 
+                    type="button" 
+                    onClick={() => ajustarCantidad(index, 1)} 
+                    disabled={supply.quantity >= 5} // Deshabilita si la cantidad es 5 o mayor
+                  >
+                    <PlusIcon className="h-4 w-4" />
+                  </Button>
                 </div>
-            </TableCell>
+              </TableCell>
             <TableCell>
                 {/* <Button type="button" variant="destructive" onClick={() => handleRemoveSupply(index)}>
                     Eliminar
